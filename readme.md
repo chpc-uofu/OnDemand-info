@@ -193,6 +193,25 @@ Following OODs [customization](https://osc.github.io/ood-documentation/master/cu
 
 We also have some logos in ```/var/www/ood/public``` that get used by the webpage frontend.
 
+#### Additional directories (scratch) in Files Explorer
+
+To show scratches, we first need to mount them on the ondemand server, e.g.:
+```
+$ cat /etc/fstab
+...
+kpscratch.ipoib.wasatch.peaks:/scratch/kingspeak/serial /scratch/kingspeak/serial nfs timeo=16,retrans=8,tcp,nolock,atime,diratime,hard,intr,nfsvers=3 0 0
+
+$ mkdir -p /scratch/kingspeak/serial
+$ mount /scratch/kingspeak/serial
+
+Then follow [Add Shortcuts to Files Menu](https://osc.github.io/ood-documentation/master/customization.html#add-shortcuts-to-files-menu) to create ```/etc/ood/config/apps/dashboard/initializers``` as follows:
+```
+OodFilesApp.candidate_favorite_paths.tap do |paths|
+  paths << Pathname.new("/scratch/kingspeak/serial/#{User.new.name}")
+end
+```
+The menu item will only show if the directory exists.
+
 ### Interactive desktop
 
 Running a graphical desktop on an interactive node requires VNC and Websockify installed on the compute nodes, and setting up the reverse proxy. This is all described at the [Setup Interactive Apps](https://osc.github.io/ood-documentation/master/app-development/interactive/setup.html) help section. 
