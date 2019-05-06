@@ -8,11 +8,11 @@
 
 ## CHPC setup
 
-CHPC runs OOD on a VM which is mounting cluster file systems (needed to see users files, and SLURM commands). We have two VMs, one called [ondemand.chpc.utah.edu](https://ondemand.chpc.utah.edu) is a production machine which we update only occasionally, the other is a testing VM called [ondemand-test.chpc.utah.edu](https://ondemand-test.chpc.utah.edu), where we experiment. We recommend this approach to prevent prologed downtimes of the production machine - we had one of these where an auto-update broke authentication and it took us a long time to troubleshoot and fix it.
+CHPC runs OOD on a VM which is mounting cluster file systems (needed to see users files, and SLURM commands). We have two VMs, one called [ondemand.chpc.utah.edu](https://ondemand.chpc.utah.edu) is a production machine which we update only occasionally, the other is a testing VM called [ondemand-test.chpc.utah.edu](https://ondemand-test.chpc.utah.edu), where we experiment. We recommend this approach to prevent prolonged downtimes of the production machine - we had one of these where an auto-update broke authentication and it took us a long time to troubleshoot and fix it.
 
 ## Installation notes
 
-Follow the [installation instructions](https://osc.github.io/ood-documentation/master/installation.html), which is quite straightforward now with the yum based packaging. The person doing the install needs at least sudo on the ondemand server, and have SSL certificates ready
+Follow the [installation instructions](https://osc.github.io/ood-documentation/master/installation.html), which is quite straightforward now with the yum based packaging. The person doing the install needs at least sudo on the ondemand server, and have SSL certificates ready.
 
 ### Authentication
 
@@ -163,16 +163,16 @@ Under user Federation > Ldap > LDAP Mappers I had to switch username to map to s
 
 ### Cluster configuration files
 
-Follow [OOD docs](https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html), we have one for each cluster, isted in [clusters.d of this repo](https://github.com/CHPC-UofU/OnDemand-info/tree/master/config/clusters.d).
+Follow [OOD docs](https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html), we have one for each cluster, listed in [clusters.d of this repo](https://github.com/CHPC-UofU/OnDemand-info/tree/master/config/clusters.d).
 
 ### Job templates
 
-Following the [job composer app docs](https://osc.github.io/ood-documentation/master/applications/job-composer.html#job-composer), we have created a directory with templates in my user space (```/uufs/chpc.utah.edu/common/home/u0101881/ondemand/chpc-myjobs-templates```), which is symlinked to the OODs expected:
+Following the [job composer app docs](https://osc.github.io/ood-documentation/master/applications/job-composer.html#job-composer), we have created a directory with templates in my user space (```/uufs/chpc.utah.edu/common/home/u0101881/ondemand/chpc-myjobs-templates```), which is symlinked to the OODs expected location:
 ```
 $ ln -s /uufs/chpc.utah.edu/common/home/u0101881/ondemand/chpc-myjobs-templates /etc/ood/config/apps/myjobs/templates
 ```
 
-Our user based templates are versioned at a [github repo](https://github.com/CHPC-UofU/chpc-myjobs-templates).
+Our user facing templates are versioned at a [github repo](https://github.com/CHPC-UofU/chpc-myjobs-templates).
 
 ### SLURM setup
 
@@ -198,7 +198,7 @@ We also have some logos in ```/var/www/ood/public``` that get used by the webpag
 To show scratches, we first need to mount them on the ondemand server, e.g.:
 ```
 $ cat /etc/fstab
-...
+```
 kpscratch.ipoib.wasatch.peaks:/scratch/kingspeak/serial /scratch/kingspeak/serial nfs timeo=16,retrans=8,tcp,nolock,atime,diratime,hard,intr,nfsvers=3 0 0
 
 $ mkdir -p /scratch/kingspeak/serial
