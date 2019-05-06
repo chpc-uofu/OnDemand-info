@@ -8,18 +8,18 @@
 
 ## CHPC setup
 
-CHPC runs OOD on a VM which is mounting cluster file systems (needed to see users files, and SLURM commands). We have two VMs, one called [https://ondemand.chpc.utah.edu](ondemand.chpc.utah.edu) is a production machine which we update only occasionally, the other is a testing VM called [https://ondemand-test.chpc.utah.edu](ondemand-test.chpc.utah.edu), where we experiment. We recommend this approach to prevent prologed downtimes of the production machine - we had one of these where an auto-update broke authentication and it took us a long time to troubleshoot and fix it.
+CHPC runs OOD on a VM which is mounting cluster file systems (needed to see users files, and SLURM commands). We have two VMs, one called [ondemand.chpc.utah.edu](https://ondemand.chpc.utah.edu) is a production machine which we update only occasionally, the other is a testing VM called [ondemand-test.chpc.utah.edu](https://ondemand-test.chpc.utah.edu), where we experiment. We recommend this approach to prevent prologed downtimes of the production machine - we had one of these where an auto-update broke authentication and it took us a long time to troubleshoot and fix it.
 
 ## Installation notes
 
-Follow the [https://osc.github.io/ood-documentation/master/installation.html](installation instructions), which is quite straightforward now with the yum based packaging. The person doing the install needs at least sudo on the ondemand server, and have SSL certificates ready
+Follow the [installation instructions](https://osc.github.io/ood-documentation/master/installation.html), which is quite straightforward now with the yum based packaging. The person doing the install needs at least sudo on the ondemand server, and have SSL certificates ready
 
 ### Authentication
 
-We had LDAP before, now we have Keycloak. In general, we followed the [https://osc.github.io/ood-documentation/master/authentication.html][authentication] section of the install guide.
+We had LDAP before, now we have Keycloak. In general, we followed the [authentication](https://osc.github.io/ood-documentation/master/authentication.html) section of the install guide.
 
 #### LDAP
-As for LDAP, following the [https://osc.github.io/ood-documentation/master/installation/add-ldap.html](LDAP setup instructions), we first made sure we can talk to LDAP, e.g., in our case:
+As for LDAP, following the [LDAP setup instructions](https://osc.github.io/ood-documentation/master/installation/add-ldap.html), we first made sure we can talk to LDAP, e.g., in our case:
 ```
 $ ldapsearch -LLL -x -H ldaps://ldap.ad.utah.edu:636 -D 'cn=chpc atlassian,ou=services,ou=administration,dc=ad,dc=utah,dc=edu' -b ou=people,dc=ad,dc=utah,dc=edu -W -s sub samaccountname=u0101881 "*"
 ```
@@ -41,7 +41,7 @@ production RDMS.  So the first thing is that, even if you have NO content in th
 you have to dump a copy of that schema out and then import it into  the MySQL DB.
 
 First get the Java MySQL connector.  Put in the right place:
-````
+```
 mkdir /opt/keycloak/modules/system/layers/base/com/mysql/main
 cp mysql-connector-java-8.0.15.jar /opt/keycloak/modules/system/layers/base/com/mysql/main/.
 touch /opt/keycloak/modules/system/layers/base/com/mysql/main/module.xml
