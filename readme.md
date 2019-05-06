@@ -144,7 +144,7 @@ default_time_zone='-07:00'
 Keycloak config
 
 (I presume done through the Keycloak web interface) - this is local to us so other institutions will need their own AD servers, groups, etc.
-
+```
 Edit Mode: READ_ONLY
 Username LDAP Attribute: sAMAccountName
 RDN LDAP Attribute: cn
@@ -157,7 +157,7 @@ Bind password: notbloodylikely
 Custom User LDAP Filter: (&(sAMAccountName=*)(memberOf=CN=chpc-users,OU=Groups,OU=CHPC,OU=Department
 OUs,DC=ad,DC=utah,DC=edu))
 Search scope: Subtree
-
+```
 Everything else default
 Under user Federation > Ldap > LDAP Mappers I had to switch username to map to sAMAccountName
 
@@ -189,13 +189,13 @@ Replace kingspeak1 with your SLURM cluster name.
 
 ### OOD customization
 
-Following OODs [https://osc.github.io/ood-documentation/master/customization.html](customization) guide, see our [](config directory of this repo).
+Following OODs [customization](https://osc.github.io/ood-documentation/master/customization.html) guide, see our [](config directory of this repo).
 
 We also have some logos in ```/var/www/ood/public``` that get used by the webpage frontend.
 
 ### Interactive desktop
 
-Running a graphical desktop on an interactive node requires VNC and Websockify installed on the compute nodes, and setting up the reverse proxy. This is all described at the [https://osc.github.io/ood-documentation/master/app-development/interactive/setup.html](Setup Interactive Apps) help section. 
+Running a graphical desktop on an interactive node requires VNC and Websockify installed on the compute nodes, and setting up the reverse proxy. This is all described at the [Setup Interactive Apps](https://osc.github.io/ood-documentation/master/app-development/interactive/setup.html) help section. 
 
 For us, this also required installing X and desktops on the interactives:
 ```
@@ -236,7 +236,7 @@ In our CentOS 7 Mate dconf gives out warning that makes jobs output.log huge, to
 
 ### Other interactive apps
 
-Its the best to first stage the interactive apps in users space using the [https://osc.github.io/ood-documentation/master/app-development/enabling-development-mode.html](app development option). To set that up:
+Its the best to first stage the interactive apps in users space using the [app development option](https://osc.github.io/ood-documentation/master/app-development/enabling-development-mode.html). To set that up:
 ```
 mkdir /var/www/ood/apps/dev/u0101881
 ln -s /uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev gateway
