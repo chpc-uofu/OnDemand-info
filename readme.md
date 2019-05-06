@@ -198,12 +198,12 @@ We also have some logos in ```/var/www/ood/public``` that get used by the webpag
 To show scratches, we first need to mount them on the ondemand server, e.g.:
 ```
 $ cat /etc/fstab
-```
+...
 kpscratch.ipoib.wasatch.peaks:/scratch/kingspeak/serial /scratch/kingspeak/serial nfs timeo=16,retrans=8,tcp,nolock,atime,diratime,hard,intr,nfsvers=3 0 0
 
 $ mkdir -p /scratch/kingspeak/serial
 $ mount /scratch/kingspeak/serial
-
+```
 Then follow [Add Shortcuts to Files Menu](https://osc.github.io/ood-documentation/master/customization.html#add-shortcuts-to-files-menu) to create ```/etc/ood/config/apps/dashboard/initializers``` as follows:
 ```
 OodFilesApp.candidate_favorite_paths.tap do |paths|
