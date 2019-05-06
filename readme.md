@@ -204,7 +204,7 @@ kpscratch.ipoib.wasatch.peaks:/scratch/kingspeak/serial /scratch/kingspeak/seria
 $ mkdir -p /scratch/kingspeak/serial
 $ mount /scratch/kingspeak/serial
 ```
-Then follow [Add Shortcuts to Files Menu](https://osc.github.io/ood-documentation/master/customization.html#add-shortcuts-to-files-menu) to create ```/etc/ood/config/apps/dashboard/initializers``` as follows:
+Then follow [Add Shortcuts to Files Menu](https://osc.github.io/ood-documentation/master/customization.html#add-shortcuts-to-files-menu) to create ```/etc/ood/config/apps/dashboard/initializers/ood.rb``` as follows:
 ```
 OodFilesApp.candidate_favorite_paths.tap do |paths|
   paths << Pathname.new("/scratch/kingspeak/serial/#{User.new.name}")
@@ -218,6 +218,8 @@ Similarly, for the group space directories, we can loop over all users groups an
     paths.concat Pathname.glob("/uufs/chpc.utah.edu/common/home/#{group.name}-group*")
   end
 ```
+
+Heres the full [```/etc/ood/config/apps/dashboard/initializers/ood.rb```](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) file.
 
 ### Interactive desktop
 
@@ -257,7 +259,7 @@ then the appropriate vnc sections in the cluster definition files would be as (t
 
 In our CentOS 7 Mate dconf gives out warning that makes jobs output.log huge, to fix that:
 * open ```/var/www/ood/apps/sys/bc_desktop/template/script.sh.erb```
-* add ```export XDG_RUNTIME_DIR="/tmp/${UID}"``` or ```unsetenv XDG_RUNTIME_DIR=```
+* add ```export XDG_RUNTIME_DIR="/tmp/${UID}"``` or ```unset XDG_RUNTIME_DIR```
 
 
 ### Other interactive apps
