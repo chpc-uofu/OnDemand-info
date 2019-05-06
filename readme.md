@@ -219,6 +219,8 @@ Similarly, for the group space directories, we can loop over all users groups an
   end
 ```
 
+Lustre is a bit more messy since it requires the Lustre client and a kernel driver - though this would be the same kind of setup done on all cluster nodes, so an admin would know what to do (ours did it for us).
+
 Heres the full [```/etc/ood/config/apps/dashboard/initializers/ood.rb```](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) file.
 
 ### Interactive desktop
