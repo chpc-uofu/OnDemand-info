@@ -1,0 +1,23 @@
+---
+v2:
+  metadata:
+    title: "Lonepeak"
+  login:
+    host: "lonepeak.chpc.utah.edu"
+  job:
+    adapter: "slurm"
+    cluster: "lonepeak"
+    bin: "/uufs/lonepeak.peaks/sys/pkg/slurm/std/bin"
+  custom:
+    queues:
+      - "lonepeak"
+      - "lonepeak-guest"
+  batch_connect:
+    basic:
+      set_host: "host=$(hostname -A | awk '{print $1}')"
+    vnc:
+      script_wrapper: |
+        export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
+        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
+        %s
+      set_host: "host=$(hostname -A | awk '{print $1}')"

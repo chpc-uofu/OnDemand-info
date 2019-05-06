@@ -1,0 +1,4 @@
+---
+title: "Tangent Desktop"
+cluster: "tangent"
+submit: "submit/slurm.yml.erb"

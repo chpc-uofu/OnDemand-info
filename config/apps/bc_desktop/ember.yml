@@ -1,0 +1,4 @@
+---
+title: "Ember Desktop"
+cluster: "ember"
+submit: "submit/slurm.yml.erb"

@@ -1,0 +1,4 @@
+---
+title: "Kingspeak Desktop"
+cluster: "kingspeak"
+submit: "submit/slurm.yml.erb"

@@ -1,0 +1,4 @@
+---
+title: "Ash Desktop"
+cluster: "ash"
+submit: "submit/slurm.yml.erb"

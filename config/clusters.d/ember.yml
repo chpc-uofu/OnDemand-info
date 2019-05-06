@@ -1,0 +1,20 @@
+---
+v2:
+  metadata:
+    title: "Ember"
+  login:
+    host: "ember.chpc.utah.edu"
+  job:
+    adapter: "slurm"
+    cluster: "ember"
+    bin: "/uufs/ember.arches/sys/pkg/slurm/std/bin"
+  batch_connect:
+    basic:
+      set_host: "host=$(hostname -A | awk '{print $2}')"
+    vnc:
+      script_wrapper: |
+        export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
+        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
+        %s
+      set_host: "host=$(hostname -A | awk '{print $2}')"
+

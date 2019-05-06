@@ -1,0 +1,25 @@
+---
+v2:
+  metadata:
+    title: "Kingspeak"
+  login:
+    host: "kingspeak.chpc.utah.edu"
+  job:
+    adapter: "slurm"
+    cluster: "kingspeak"
+    bin: "/uufs/kingspeak.peaks/sys/pkg/slurm/std/bin"
+  custom:
+    queues:
+      - "kingspeak"
+      - "kingspeak-guest"
+      - "kingspeak-freecycle"
+  batch_connect:
+    basic:
+      set_host: "host=$(hostname -A | awk '{print $2}')"
+    vnc:
+      script_wrapper: |
+        export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
+        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
+        %s
+      set_host: "host=$(hostname -A | awk '{print $2}')"
+

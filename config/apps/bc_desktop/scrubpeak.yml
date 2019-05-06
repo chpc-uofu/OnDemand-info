@@ -1,0 +1,4 @@
+---
+title: "Scrubpeak Desktop"
+cluster: "scrubpeak"
+submit: "submit/slurm.yml.erb"

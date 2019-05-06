@@ -1,0 +1,24 @@
+---
+v2:
+  metadata:
+    title: "Scrubpeak"
+  login:
+    host: "scrubpeak.chpc.utah.edu"
+  job:
+    adapter: "slurm"
+    cluster: "scrubpeak"
+    bin: "/uufs/scrubpeak.peaks/sys/pkg/slurm/std/bin"
+  custom:
+    queues:
+      - "scrubpeak"
+      - "scrubpeak-shared"
+  batch_connect:
+    basic:
+      set_host: "host=$(hostname -A | awk '{print $1}')"
+    vnc:
+      script_wrapper: |
+        export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
+        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
+        %s
+      set_host: "host=$(hostname -A | awk '{print $1}')"
+

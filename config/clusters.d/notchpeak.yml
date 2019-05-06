@@ -1,0 +1,26 @@
+---
+v2:
+  metadata:
+    title: "Notchpeak"
+  login:
+    host: "notchpeak.chpc.utah.edu"
+  job:
+    adapter: "slurm"
+    cluster: "notchpeak"
+    bin: "/uufs/notchpeak.peaks/sys/installdir/slurm/std/bin"
+  custom:
+    queues:
+      - "notchpeak"
+      - "notchpeak-guest"
+      - "notchpeak-freecycle"
+  batch_connect:
+    basic:
+      set_host: "host=$(hostname -A | awk '{print $2}')"
+    vnc:
+      script_wrapper: |
+        export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
+        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
+        %s
+      set_host: "host=$(hostname -A | awk '{print $2}')"
+# first hostname - TCP, second hostname - IB
+
