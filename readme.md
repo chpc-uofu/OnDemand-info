@@ -163,7 +163,7 @@ Under user Federation > Ldap > LDAP Mappers I had to switch username to map to s
 
 ### Cluster configuration files
 
-Follow [OOD docs](https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html), we have one for each cluster, isted in [](cluster.d of this repo).
+Follow [OOD docs](https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html), we have one for each cluster, isted in [clusters.d of this repo](https://github.com/CHPC-UofU/OnDemand-info/tree/master/config/clusters.d).
 
 ### Job templates
 
@@ -172,7 +172,7 @@ Following the [job composer app docs](https://osc.github.io/ood-documentation/ma
 $ ln -s /uufs/chpc.utah.edu/common/home/u0101881/ondemand/chpc-myjobs-templates /etc/ood/config/apps/myjobs/templates
 ```
 
-The user based templates are versioned at a [github repo](https://github.com/CHPC-UofU/chpc-myjobs-templates).
+Our user based templates are versioned at a [github repo](https://github.com/CHPC-UofU/chpc-myjobs-templates).
 
 ### SLURM setup
 
@@ -189,7 +189,7 @@ Replace kingspeak1 with your SLURM cluster name.
 
 ### OOD customization
 
-Following OODs [customization](https://osc.github.io/ood-documentation/master/customization.html) guide, see our [](config directory of this repo).
+Following OODs [customization](https://osc.github.io/ood-documentation/master/customization.html) guide, see our [config directory of this repo](https://github.com/CHPC-UofU/OnDemand-info/tree/master/config).
 
 We also have some logos in ```/var/www/ood/public``` that get used by the webpage frontend.
 
@@ -230,8 +230,8 @@ then the appropriate vnc sections in the cluster definition files would be as (t
 ```
 
 In our CentOS 7 Mate dconf gives out warning that makes jobs output.log huge, to fix that:
- -- open ```/var/www/ood/apps/sys/bc_desktop/template/script.sh.erb```
- -- add ```export XDG_RUNTIME_DIR="/tmp/${UID}"``` or ```unsetenv XDG_RUNTIME_DIR=```
+* open ```/var/www/ood/apps/sys/bc_desktop/template/script.sh.erb```
+* add ```export XDG_RUNTIME_DIR="/tmp/${UID}"``` or ```unsetenv XDG_RUNTIME_DIR=```
 
 
 ### Other interactive apps
@@ -242,13 +242,13 @@ mkdir /var/www/ood/apps/dev/u0101881
 ln -s /uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev gateway
 ```
 then restart the web server via the OODs Help - Restart Web Server menu.
-It is important to have the /var/www/ood/apps/dev/u0101881/gateway directory - thats what OOD looks for to show the Develop menu tab. u0101881 is my user name - make sure to put yours there and also your correct home dir location.
+It is important to have the ```/var/www/ood/apps/dev/u0101881/gateway``` directory - thats what OOD looks for to show the Develop menu tab. ```u0101881``` is my user name - make sure to put yours there and also your correct home dir location.
 
-I usually fork the OSCs interactive app templates, then clone them to /uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev, modify to our needs, and push back to the fork. Heres a list of apps that we have:
-* [https://github.com/CHPC-UofU/bc_osc_jupyter](Jupyter)
-* [https://github.com/CHPC-UofU/bc_osc_matlab](Matlab)
-* [https://github.com/CHPC-UofU/bc_osc_ansys_workbench](ANSYS Workbench)
-* [https://github.com/CHPC-UofU/bc_osc_rstudio_server](RStudio Server)
+I usually fork the OSCs interactive app templates, then clone them to ```/uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev```, modify to our needs, and push back to the fork. When the app is ready to deploy, put it to ```/var/www/ood/apps/sys```. Heres a list of apps that we have:
+* [Jupyter](https://github.com/CHPC-UofU/bc_osc_jupyter)
+* [Matlab](https://github.com/CHPC-UofU/bc_osc_matlab)
+* [ANSYS Workbench](https://github.com/CHPC-UofU/bc_osc_ansys_workbench)
+* [RStudio Server](https://github.com/CHPC-UofU/bc_osc_rstudio_server)
 There are a few other apps that OSC has but they either need GPUs which we dont have on our interactive test nodes (VMD, Paraview), or, are licensed with group based licenses for us (COMSOL, Abaqus). We may look in the future to restrict access to these apps to the licensed groups.
 
 
