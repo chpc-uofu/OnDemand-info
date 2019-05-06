@@ -252,5 +252,7 @@ I usually fork the OSCs interactive app templates, then clone them to ```/uufs/c
 
 There are a few other apps that OSC has but they either need GPUs which we dont have on our interactive test nodes (VMD, Paraview), or, are licensed with group based licenses for us (COMSOL, Abaqus). We may look in the future to restrict access to these apps to the licensed groups.
 
+### SLURM partitions in the interactive apps
 
+We have a number of SLURM partitions where an user can run. It can be hard to remember what partitions an user can access. We have a small piece of code that parses available user partitions and offers them as a drop-down menu. This app is at [Jupyter with dynamic partitions repo](https://github.com/CHPC-UofU/bc_jupyter_dynpart). In this repo, the ```static``` versions of the ```form.yml.erb``` and ```submit.yml.erb``` show all available cluster partitions.
 
