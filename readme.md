@@ -8,7 +8,7 @@
 
 ## CHPC setup
 
-CHPC runs OOD on a VM which is mounting cluster file systems (needed to see users files, and SLURM commands). We have two VMs, one called [ondemand.chpc.utah.edu](ondemand.chpc.utah.edu) is a production machine which we update only occasionally, the other is a testing VM called [ondemand-test.chpc.utah.edu](ondemand-test.chpc.utah.edu), where we experiment. We recommend this approach to prevent prologed downtimes of the production machine - we had one of these where an auto-update broke authentication and it took us a long time to troubleshoot and fix it.
+CHPC runs OOD on a VM which is mounting cluster file systems (needed to see users files, and SLURM commands). We have two VMs, one called [https://ondemand.chpc.utah.edu](ondemand.chpc.utah.edu) is a production machine which we update only occasionally, the other is a testing VM called [https://ondemand-test.chpc.utah.edu](ondemand-test.chpc.utah.edu), where we experiment. We recommend this approach to prevent prologed downtimes of the production machine - we had one of these where an auto-update broke authentication and it took us a long time to troubleshoot and fix it.
 
 ## Installation notes
 
