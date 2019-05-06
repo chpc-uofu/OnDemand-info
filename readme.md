@@ -212,6 +212,13 @@ end
 ```
 The menu item will only show if the directory exists.
 
+Similarly, for the group space directories, we can loop over all users groups and add the existing paths via:
+```
+  User.new.groups.each do |group|
+    paths.concat Pathname.glob("/uufs/chpc.utah.edu/common/home/#{group.name}-group*")
+  end
+```
+
 ### Interactive desktop
 
 Running a graphical desktop on an interactive node requires VNC and Websockify installed on the compute nodes, and setting up the reverse proxy. This is all described at the [Setup Interactive Apps](https://osc.github.io/ood-documentation/master/app-development/interactive/setup.html) help section. 
