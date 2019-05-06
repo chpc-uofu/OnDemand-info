@@ -163,16 +163,16 @@ Under user Federation > Ldap > LDAP Mappers I had to switch username to map to s
 
 ### Cluster configuration files
 
-Follow [https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html](OOD docs), we have one for each cluster, isted in [](cluster.d of this repo).
+Follow [OOD docs](https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html), we have one for each cluster, isted in [](cluster.d of this repo).
 
 ### Job templates
 
-Following the [https://osc.github.io/ood-documentation/master/applications/job-composer.html#job-composer](job composer app docs), we have created a directory with templates in my user space (/uufs/chpc.utah.edu/common/home/u0101881/ondemand/chpc-myjobs-templates), which is symlinked to the OODs expected:
+Following the [job composer app docs](https://osc.github.io/ood-documentation/master/applications/job-composer.html#job-composer), we have created a directory with templates in my user space (```/uufs/chpc.utah.edu/common/home/u0101881/ondemand/chpc-myjobs-templates```), which is symlinked to the OODs expected:
 ```
 $ ln -s /uufs/chpc.utah.edu/common/home/u0101881/ondemand/chpc-myjobs-templates /etc/ood/config/apps/myjobs/templates
 ```
 
-The user based templates are versioned at a [https://github.com/CHPC-UofU/chpc-myjobs-templates](github repo).
+The user based templates are versioned at a [github repo](https://github.com/CHPC-UofU/chpc-myjobs-templates).
 
 ### SLURM setup
 
