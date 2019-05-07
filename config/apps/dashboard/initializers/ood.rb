@@ -14,7 +14,7 @@ OodFilesApp.candidate_favorite_paths.tap do |paths|
   #paths.concat Pathname.glob("/uufs/chpc.utah.edu/common/home/#{project}-group*")
 
   # group dir based on all user's groups
-  User.new.groups.each do |group|
+  OodSupport::User.new.groups.each do |group|
     paths.concat Pathname.glob("/uufs/chpc.utah.edu/common/home/#{group.name}-group*")
   end
 end

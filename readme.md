@@ -161,6 +161,8 @@ Search scope: Subtree
 Everything else default
 Under user Federation > Ldap > LDAP Mappers I had to switch username to map to sAMAccountName
 
+Note: The default Java memory on the Keycloak service is fairly low, our machine got wedged presumably because of that, so we bumped up the memory settings for Java from xms64m xm512m to xms1024m xmx2048m.
+
 ### Cluster configuration files
 
 Follow [OOD docs](https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html), we have one for each cluster, listed in [clusters.d of this repo](https://github.com/CHPC-UofU/OnDemand-info/tree/master/config/clusters.d).
