@@ -298,7 +298,7 @@ In our case, it involved:
 ```
 analytics:
   url: 'http://www.google-analytics.com/collect'
-  id: 'UA-122259839-1'
+  id: 'UA-xxxxxxxxx-x'
 ```
 * rebuild and reinstall Apache configuration file by running ```sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal```.
 * restart Apache, on CentOS 7: ```sudo systemctl try-restart httpd24-httpd.service httpd24-htcacheclean.service```.
