@@ -288,3 +288,17 @@ There are a few other apps that OSC has but they either need GPUs which we dont 
 
 We have a number of SLURM partitions where an user can run. It can be hard to remember what partitions an user can access. We have a small piece of code that parses available user partitions and offers them as a drop-down menu. This app is at [Jupyter with dynamic partitions repo](https://github.com/CHPC-UofU/bc_jupyter_dynpart). In this repo, the ```static``` versions of the ```form.yml.erb``` and ```submit.yml.erb``` show all available cluster partitions.
 
+### Google Analytics
+
+It is useful to set up Google Analytics to gather usage data, rather than parsing through the Apache logs. This is somewhat hiddenly explained [here](https://osc.github.io/ood-documentation/master/infrastructure/ood-portal-generator/examples/add-google-analytics.html).
+
+In our case, it involved:
+* signing up for an account at analytics.google.com, and noting the account name
+* putting this account name to /etc/ood/config/ood_portal.yml, as described in the document above. Our piece is:
+```
+analytics:
+  url: 'http://www.google-analytics.com/collect'
+  id: 'UA-122259839-1'
+```
+* rebuild and reinstall Apache configuration file by running ```sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal```.
+* restart Apache, on CentOS 7: ```sudo systemctl try-restart httpd24-httpd.service httpd24-htcacheclean.service```.
