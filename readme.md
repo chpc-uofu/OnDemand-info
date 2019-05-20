@@ -1,24 +1,24 @@
-Table of Contents
+Notes on Open Ondemand at CHPC
 =================
 
-   * [Notes on Open Ondemand at CHPC](#notes-on-open-ondemand-at-chpc)
-      * [Useful links](#useful-links)
-      * [CHPC setup](#chpc-setup)
-      * [Installation notes](#installation-notes)
-         * [Authentication](#authentication)
-            * [LDAP](#ldap)
-            * [Keycloak](#keycloak)
-         * [Cluster configuration files](#cluster-configuration-files)
-         * [Job templates](#job-templates)
-         * [SLURM setup](#slurm-setup)
-         * [OOD customization](#ood-customization)
-            * [Additional directories (scratch) in Files Explorer](#additional-directories-scratch-in-files-explorer)
-         * [Interactive desktop](#interactive-desktop)
-         * [Other interactive apps](#other-interactive-apps)
-         * [SLURM partitions in the interactive apps](#slurm-partitions-in-the-interactive-apps)
-         * [Google Analytics](#google-analytics)
+Table of Contents
 
-# Notes on Open Ondemand at CHPC
+   * [Useful links](#useful-links)
+   * [CHPC setup](#chpc-setup)
+   * [Installation notes](#installation-notes)
+      * [Authentication](#authentication)
+         * [LDAP](#ldap)
+         * [Keycloak](#keycloak)
+      * [Cluster configuration files](#cluster-configuration-files)
+      * [Job templates](#job-templates)
+      * [SLURM setup](#slurm-setup)
+      * [OOD customization](#ood-customization)
+         * [Additional directories (scratch) in Files Explorer](#additional-directories-scratch-in-files-explorer)
+      * [Interactive desktop](#interactive-desktop)
+      * [Other interactive apps](#other-interactive-apps)
+      * [SLURM partitions in the interactive apps](#slurm-partitions-in-the-interactive-apps)
+      * [Google Analytics](#google-analytics)
+
 
 ## Useful links
 
