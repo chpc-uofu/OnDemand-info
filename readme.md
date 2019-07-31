@@ -25,7 +25,7 @@ Table of Contents
 - documentation: [https://osc.github.io/ood-documentation/master/index.html](https://osc.github.io/ood-documentation/master/index.html)
 - installation [https://osc.github.io/ood-documentation/master/installation.html](https://osc.github.io/ood-documentation/master/installation.html)
 - github repo: [https://github.com/OSC/Open-OnDemand](https://github.com/OSC/Open-OnDemand)
-- recommendation for OOD deployment from OSC[https://figshare.com/articles/Deploying_and_Managing_an_OnDemand_Instance/9170585](https://figshare.com/articles/Deploying_and_Managing_an_OnDemand_Instance/9170585)
+- recommendation for OOD deployment from OSC: [https://figshare.com/articles/Deploying_and_Managing_an_OnDemand_Instance/9170585](https://figshare.com/articles/Deploying_and_Managing_an_OnDemand_Instance/9170585)
 
 ## CHPC setup
 
