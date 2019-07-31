@@ -30,6 +30,7 @@ Table of Contents
 ## CHPC setup
 
 CHPC runs OOD on a VM which is mounting cluster file systems (needed to see users files, and SLURM commands). We have two VMs, one called [ondemand.chpc.utah.edu](https://ondemand.chpc.utah.edu) is a production machine which we update only occasionally, the other is a testing VM called [ondemand-test.chpc.utah.edu](https://ondemand-test.chpc.utah.edu), where we experiment. We recommend this approach to prevent prolonged downtimes of the production machine - we had one of these where an auto-update broke authentication and it took us a long time to troubleshoot and fix it.
+Also, having a dedicated short walltime/test queue or partition for prompt startup of jobs is essential to support the interactive desktop and apps, which are one of the big strengths of OOD. We did not have this at first which led to minimal use of OOD. The use picked up after we have dedicated two 64 core nodes to a partition with 8 hour walltime limit and 32 core per user CPU limit.
 
 ## Installation notes
 
