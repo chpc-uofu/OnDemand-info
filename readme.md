@@ -296,7 +296,19 @@ ln -s /uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev gateway
 then restart the web server via the OODs Help - Restart Web Server menu.
 It is important to have the ```/var/www/ood/apps/dev/u0101881/gateway``` directory - thats what OOD looks for to show the Develop menu tab. ```u0101881``` is my user name - make sure to put yours there and also your correct home dir location.
 
-I usually fork the OSCs interactive app templates, then clone them to ```/uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev```, modify to our needs, and push back to the fork. When the app is ready to deploy, put it to ```/var/www/ood/apps/sys```. Heres a list of apps that we have:
+I usually fork the OSCs interactive app templates, then clone them to ```/uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev```, modify to our needs, and push back to the fork. When the app is ready to deploy, put it to ```/var/www/ood/apps/sys```. That is:
+```
+$ cd /uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev
+$ git clone https://github.com/CHPC-UofU/bc_osc_comsol.git
+$ mv bc_osc_comsol comsol_app_np
+$ cd comsol_app_np
+```
+now modify ```form.yml```, ```submit.yml.erb``` and ```template/script.sh.erb```. Then test on your OnDemand server. If all works well:
+```
+$ sudo cp -r /uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev/comsol_app_np /var/www/ood/apps/sys
+```
+
+Heres a list of apps that we have:
 * [Jupyter](https://github.com/CHPC-UofU/bc_osc_jupyter)
 * [Matlab](https://github.com/CHPC-UofU/bc_osc_matlab)
 * [ANSYS Workbench](https://github.com/CHPC-UofU/bc_osc_ansys_workbench)
