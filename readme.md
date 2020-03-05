@@ -217,6 +217,16 @@ Following OODs [customization](https://osc.github.io/ood-documentation/master/cu
 
 We also have some logos in ```/var/www/ood/public``` that get used by the webpage frontend.
 
+#### Local dashboard adjustments
+
+in ```/etc/ood/config/locales/en.yml``` we disable the big logo and adjust file quota message:
+```
+en:
+ dashboard:
+  quota_reload_message: "Reload page to see updated quota. Quotas are updated every hour."
+  welcome_html: |
+```
+
 #### Additional directories (scratch) in Files Explorer
 
 To show scratches, we first need to mount them on the ondemand server, e.g.:
@@ -246,6 +256,18 @@ Similarly, for the group space directories, we can loop over all users groups an
 Lustre is a bit more messy since it requires the Lustre client and a kernel driver - though this would be the same kind of setup done on all cluster nodes, so an admin would know what to do (ours did it for us).
 
 Heres the full [```/etc/ood/config/apps/dashboard/initializers/ood.rb```](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) file.
+
+#### Disk quota warnings
+
+Following [https://osc.github.io/ood-documentation/master/customization.html#disk-quota-warnings-on-dashboard](https://osc.github.io/ood-documentation/master/customization.html#disk-quota-warnings-on-dashboard) with some adjustments based on [https://discourse.osc.edu/t/disk-quota-warnings-page-missing-some-info/716](https://discourse.osc.edu/t/disk-quota-warnings-page-missing-some-info/716).
+
+JSON file with user storage info is produced from the quota logs run hourly, and then in ```/etc/ood/config/apps/dashboard/env```:
+```
+OOD_QUOTA_PATH="https://www.chpc.utah.edu/apps/systems/curl_post/quota.json"
+OOD_QUOTA_THRESHOLD="0.90"
+```
+
+For the https curl to work, we had to add the OOD servers to the www.chpc.utah.edu.
 
 ### Interactive desktop
 

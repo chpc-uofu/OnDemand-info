@@ -15,11 +15,15 @@ v2:
       - "notchpeak-freecycle"
   batch_connect:
     basic:
+      script_wrapper: |
+        export XDG_RUNTIME_DIR=$(mktemp -d)
+        %s
       set_host: "host=$(hostname -A | awk '{print $2}')"
     vnc:
       script_wrapper: |
         export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
         export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
+        export XDG_RUNTIME_DIR=$(mktemp -d)
         %s
       set_host: "host=$(hostname -A | awk '{print $2}')"
 # first hostname - TCP, second hostname - IB

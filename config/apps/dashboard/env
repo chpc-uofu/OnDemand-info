@@ -6,19 +6,23 @@ OOD_PORTAL="ondemand"
 OOD_NAVBAR_TYPE=default
 
 
-MOTD_PATH="/etc/motd"
+# MOTD_PATH="/etc/motd"
 
 # header logo
 #OOD_DASHBOARD_HEADER_IMG_LOGO="/public/chpc_logo_block.png"
 OOD_DASHBOARD_HEADER_IMG_LOGO="/public/CHPC-logo.png"
 # logo in the main window
-# OOD_DASHBOARD_LOGO="/public/chpc_logo_block.png"
+#OOD_DASHBOARD_LOGO=""
 OOD_DASHBOARD_SUPPORT_URL="http://www.chpc.utah.edu/about/contact.php"
 OOD_DASHBOARD_SUPPORT_EMAIL="helpdesk@chpc.utah.edu"
 OOD_DASHBOARD_DOCS_URL="https://www.chpc.utah.edu/documentation/software/ondemand.php"
 OOD_DASHBOARD_PASSWD_URL="https://www.acs.utah.edu/uofu/acs/uupasswd/portal/password/selfservice/ForgottenPasswordHelp.jsp"
 
 # BOOTSTRAP_NAVBAR_HEIGHT='80px'
+
+OOD_QUOTA_PATH="https://www.chpc.utah.edu/apps/systems/curl_post/quota.json"
+#OOD_QUOTA_PATH="/var/www/ood/public/quota.json"
+OOD_QUOTA_THRESHOLD="0.90"
 
 # enable OOD apps development for all users
 # OOD_APP_DEVELOPMENT=1
