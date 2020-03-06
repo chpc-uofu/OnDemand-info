@@ -23,12 +23,12 @@ his containers: https://hub.docker.com/u/rsettlag
 his OOD apps: https://github.com/rsettlage/ondemand2
 
 Update 2, Nov19
-Bob has hardcoded http_proxies in the container R config files (/usr/local/lib/R/etc/Rprofile.site), rather than trying to hack this through user's ~/.Rprofile, pull sandbox container, modify and save:
+Bob has hardcoded http_proxies in the container R config files (/usr/local/lib/R/etc/Rprofile.site), rather than trying to hack this through user's ~/.Rprofile, pull sandbox container, modify and save
 
 $ singularity build --sandbox ood-rstudio-bio_3.6.1 docker://rsettlag/ood-rstudio-bio:3.6.1
-sudo /uufs/chpc.utah.edu/sys/installdir/singularity3/std/bin/singularity shell --writable ood-rstudio-bio_3.6.1
-apt-get update && apt-get install apt-file -y && apt-file update && apt-get install vim -y
-vi /usr/local/lib/R/etc/Rprofile.site
+$ sudo /uufs/chpc.utah.edu/sys/installdir/singularity3/std/bin/singularity shell --writable ood-rstudio-bio_3.6.1
+$ apt-get update && apt-get install apt-file -y && apt-file update && apt-get install vim -y
+$ vi /usr/local/lib/R/etc/Rprofile.site
 - remove:
  Sys.setenv(http_proxy="http://uaserve.cc.vt.edu:8080")     
  Sys.setenv(https_proxy="http://uaserve.cc.vt.edu:8080")     
@@ -41,4 +41,37 @@ NOTE - trying to figure out how to get the http_proxy env. vars. into the RStudi
 The process is as follows
 OOD job (script.sh.erb) -> start rserver in container (env vars to here need to be brought in with SINGULARITYENV_) -> each new R session starts with $RSESSION_WRAPPER_FILE - which starts the R session.
 
-Turns out that the http_* env. vars. propagate from the user host session into the container, but, rserver does not propagate them into the rsession.sh that starts the session - hand adding whatever other environment variables we need into the rsession.sh, defined in template/script.sh.erb, makes those variables to pass into the rsession inside of OOD. See https://github.com/CHPC-UofU/bc_osc_rstudio_server/blob/master/template/script.sh.erb
+Bob's Dockerfile is in dir 3.6.1, and is based on rocker/rstudio, https://hub.docker.com/r/rocker/rstudio. 
+We could base containers with other packages on rocker/rstudio container
+
+Jan 2020 - adding some more packages for Atakan
+
+Monocle 3
+https://cole-trapnell-lab.github.io/monocle3/docs/installation/
+BiocManager is already there, so:
+
+BiocManager::install(c('BiocGenerics', 'DelayedArray', 'DelayedMatrixStats',
+                       'limma', 'S4Vectors', 'SingleCellExperiment',
+                       'SummarizedExperiment', 'batchelor'))
+install.packages("devtools")
+devtools::install_github('cole-trapnell-lab/leidenbase')
+apt-get install libudunits2-dev
+apt-get install libgdal-dev
+devtools::install_github('cole-trapnell-lab/monocle3')
+
+Slingshot:
+apt-get install libgsl-dev
+BiocManager::install("slingshot")
+
+Mar20
+
+rocker/geospatial is based on rocker/rstudio, has most of the packages and runs straight from the Docker image:
+singularity build ood-rstudio-geo-rocker_3.6.2 docker://rocker/geospatial
+
+similarly for bioconductor/bioconductor_docker, https://hub.docker.com/r/bioconductor/bioconductor_docker:
+singularity build ood-bioconductor_3.6.2 docker://bioconductor/bioconductor_docker
+
+and for base R, https://hub.docker.com/r/rocker/rstudio:
+singularity build ood-rstudio-rocker_3.6.2.sif docker://rocker/rstudio
+
+
