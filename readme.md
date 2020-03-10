@@ -269,6 +269,8 @@ OOD_QUOTA_THRESHOLD="0.90"
 
 For the https curl to work, we had to add the OOD servers to the www.chpc.utah.edu.
 
+To get the json file, our storage admin Sam runs a script on our XFS systems hourly to produce flat files that contain the quota information and sends them to our web server, where our webadmin Chonghuan has a parser that ingests this info into a database. Chonghuan then wrote a script that queries the database and creates the json file. A doctored version of this script, which assumes that one parses the flat file themselves, is here. 
+
 ### Interactive desktop
 
 Running a graphical desktop on an interactive node requires VNC and Websockify installed on the compute nodes, and setting up the reverse proxy. This is all described at the [Setup Interactive Apps](https://osc.github.io/ood-documentation/master/app-development/interactive/setup.html) help section. 
