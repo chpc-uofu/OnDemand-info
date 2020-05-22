@@ -191,8 +191,7 @@ Note: The default Java memory on the Keycloak service is fairly low, our machine
 
 The stock Apache config that comes with CentOS is relatively weak. We have learned the hard way when a class of 30 people was unable to have everyone connected at the OnDemand server at the same time.
  
-We follow the [recommendations from OSC](https://discourse.osc.edu/t/ood-host-configuration-recommendations/883) on the Apache settings. These settings have made the web server more responsive and allowed to support more connections at the same time. In particular, modify the following files in ```/opt/rh/httpd24/root/etc/httpd/conf.modules.d/```:<br>
-```00-mpm.conf```:<br>
+We follow the [recommendations from OSC](https://discourse.osc.edu/t/ood-host-configuration-recommendations/883) on the Apache settings. These settings have made the web server more responsive and allowed to support more connections at the same time. In particular, modify file ```/opt/rh/httpd24/root/etc/httpd/conf.modules.d/00-mpm.conf```:<br>
 ```
 #LoadModule mpm_prefork_module modules/mod_mpm_prefork.so
 LoadModule mpm_event_module modules/mod_mpm_event.so
@@ -250,7 +249,7 @@ Replace kingspeak1 with your SLURM cluster name.
 
 To launch jobs on our interactive "frisco" nodes, we use the [Linux Host Adapter](https://osc.github.io/ood-documentation/release-1.7/installation/resource-manager/linuxhost.html#resource-manager-linuxhost).
 
-We follow the install instructions, in particular create files /etc/ood/config/clusters.d/frisco.yml and /etc/ood/config/apps/bc_desktop/frisco.yml. We create a Singularity container with CentOS7 and place it in the sys branch so that the frisco hosts can read it. 
+We follow the install instructions, in particular create files [```/etc/ood/config/clusters.d/frisco.yml```](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/clusters.d/frisco.yml) and [```/etc/ood/config/apps/bc_desktop/frisco.yml```](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/bc_desktop/frisco.yml). We create a [Singularity container](https://github.com/CHPC-UofU/OnDemand-info/tree/master/linux-host) with CentOS7 and place it in the sys branch so that the frisco hosts can read it. 
 
 To make it work, we had to do the following changes:
 - set up host based SSH authentication and open firewall on friscos to ondemand.
