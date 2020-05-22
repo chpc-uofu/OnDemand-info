@@ -9,9 +9,11 @@ Table of Contents
       * [Authentication](#authentication)
          * [LDAP](#ldap)
          * [Keycloak](#keycloak)
+      * [Apache configuration](#apache-configuration)
       * [Cluster configuration files](#cluster-configuration-files)
       * [Job templates](#job-templates)
       * [SLURM setup](#slurm-setup)
+      * [Frisco jobs setup](#frisco-jobs-setup)
       * [OOD customization](#ood-customization)
          * [Additional directories (scratch) in Files Explorer](#additional-directories-scratch-in-files-explorer)
       * [Interactive desktop](#interactive-desktop)
@@ -185,6 +187,39 @@ Under user Federation > Ldap > LDAP Mappers I had to switch username to map to s
 
 Note: The default Java memory on the Keycloak service is fairly low, our machine got wedged presumably because of that, so we bumped up the memory settings for Java from xms64m xm512m to xms1024m xmx2048m.
 
+### Apache configuration 
+
+The stock Apache config that comes with CentOS is relatively weak. We have learned the hard way when a class of 30 people was unable to have everyone connected at the OnDemand server at the same time.
+ 
+We follow the [recommendations from OSC](https://discourse.osc.edu/t/ood-host-configuration-recommendations/883) on the Apache settings. These settings have made the web server more responsive and allowed to support more connections at the same time. In particular, modify the following files in ```/opt/rh/httpd24/root/etc/httpd/conf.modules.d/```:<br>
+```00-mpm.conf```:<br>
+```
+#LoadModule mpm_prefork_module modules/mod_mpm_prefork.so
+LoadModule mpm_event_module modules/mod_mpm_event.so
+
+<IfModule mpm_event_module>
+  ServerLimit 32
+  StartServers 2
+  MaxRequestWorkers 512
+  MinSpareThreads 25
+  MaxSpareThreads 75
+  ThreadsPerChild 32
+  MaxRequestsPerChild 0
+  ThreadLimit 512
+  ListenBacklog 511
+</IfModule>
+```
+
+Check Apache config syntax: ```/opt/rh/httpd24/root/sbin/httpd -t```
+
+Then restart Apache as ```systemctl try-restart httpd24-httpd.service httpd24-htcacheclean.service```.
+
+Check that the Server MPM is event: ```/opt/rh/httpd24/root/sbin/httpd -V```
+
+#### Web server monitoring
+
+Monitoring the web server performance is useful to see if the web server configuration and hardware are sufficient for the needs. We installed Apache mod_status module and netdata monitoring tool following [these instructions](https://www.tecmint.com/monitor-apache-performance-using-netdata-on-centos/). Steve also added basic authentication to the netstat web server.
+
 ### Cluster configuration files
 
 Follow [OOD docs](https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html), we have one for each cluster, listed in [clusters.d of this repo](https://github.com/CHPC-UofU/OnDemand-info/tree/master/config/clusters.d).
@@ -210,6 +245,26 @@ $ sudo systemctl start munge
 ```
 
 Replace kingspeak1 with your SLURM cluster name.
+
+### Frisco jobs setup
+
+To launch jobs on our interactive "frisco" nodes, we use the [Linux Host Adapter](https://osc.github.io/ood-documentation/release-1.7/installation/resource-manager/linuxhost.html#resource-manager-linuxhost).
+
+We follow the install instructions, in particular create files /etc/ood/config/clusters.d/frisco.yml and /etc/ood/config/apps/bc_desktop/frisco.yml. We create a Singularity container with CentOS7 and place it in the sys branch so that the frisco hosts can read it. 
+
+To make it work, we had to do the following changes:
+- set up host based SSH authentication and open firewall on friscos to ondemand.
+- modify the ```set_host``` in the ```clusters.d/frisco.yml``` so that the host is hard set to the ```chpc.utah.edu``` network route. Friscos have 3 different network interfaces and we need to make sure that OOD is consistently using the same interface for all its communication.
+- currently only allow offload to frisco1, as the OOD defaults to having a round-robin hostname distribution while friscos dont round-robin.
+- modify the revese proxy regex in ```/etc/ood/config/ood_portal.yml``` to include the chpc.utah.edu domain.
+- modify ```/var/www/ood/apps/sys/bc_desktop/submit.yml.erb``` - we have a custom ```num_cores``` field to request certain number of cores, had to wrapping it in an if statement:
+```
+    <%- if num_cores != "none" -%>
+    - "-n <%= num_cores %>"
+    <%- end -%>
+```
+   while in ```/etc/ood/config/apps/bc_desktop/frisco.yml``` have ```num_cores: none```
+
 
 ### OOD customization
 

@@ -1,0 +1,4 @@
+DEFAULT_SSHHOST="frisco1.chpc.utah.edu"
+
+# ssh wrapper sets session timeout to 2 hours
+OOD_SSH_WRAPPER=/var/www/ood/apps/sys/shell/bin/ssh

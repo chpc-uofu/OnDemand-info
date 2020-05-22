@@ -1,0 +1,86 @@
+# A CentOS 7 container on the same version as CHPC clusters for use with Open OnDemand
+# Linux Host Adapter job offload to Frisco nodes
+
+# bootstraping from docker image is faster and includes more dependencies
+BootStrap: docker
+From: centos:7.6.1810
+
+# alternatively we can bootstrap directly from the repo, but installation will be longer
+#BootStrap: debootstrap
+#OSVersion: xenial
+#MirrorURL: http://us.archive.ubuntu.com/ubuntu/
+#Include: rpm2cpio
+
+%help
+A base CentOS Singularity container with Lmod
+
+%setup
+    # Runs from outside the container during Bootstrap
+    # for example how to use this section see
+    # https://github.com/mcuma/chpc_singularity/blob/master/tensorflow/ubuntu16-tensorflow-1.0.1-gpu.def
+
+
+%post
+    # Runs within the container during Bootstrap
+
+    # Install the commonly used packages (from repo)
+    yum install -y redhat-lsb-core epel-release 'dnf-command(config-manager)' gcc
+
+    # Enable PowerTools from EPEL
+#    yum config-manager --set-enabled PowerTools
+
+    yum update -y --exclude=setup
+#   apt update && apt-get install -y --no-install-recommends \
+#       apt-utils \
+#       build-essential \
+#       locales \
+#       pkg-config \
+#       software-properties-common \
+#       vim \
+#
+#   # Set up some required environment defaults
+#   #MC issue with locale (LC_ALL, LANGUAGE), to get it right:
+#   locale-gen "en_US.UTF-8" 
+#   dpkg-reconfigure locales 
+#   export LANGUAGE="en_US.UTF-8"
+#   echo 'LANGUAGE="en_US.UTF-8"' >> /etc/default/locale
+#   echo 'LC_ALL="en_US.UTF-8"' >> /etc/default/locale
+#
+#   # set noninteractive installation
+#   export DEBIAN_FRONTEND=noninteractive
+#   #install tzdata package
+#   apt install -y tzdata
+#   # set your timezone
+#   ln -fs /usr/share/zoneinfo/America/Denver /etc/localtime
+#   dpkg-reconfigure --frontend noninteractive tzdata
+#
+#   # need to create mount point for home dir
+#   mkdir /uufs
+#   mkdir /scratch
+#
+#   # LMod
+    yum install -y lua lua-devel lua-posix lua-term lua-filesystem lua-lpeg lua-json tcl-devel
+
+#   apt install -y liblua5.2-0 liblua5.2-dev lua-filesystem-dev lua-filesystem lua-posix-dev lua-posix lua5.2 tcl tcl-dev #lua-term lua-term-dev lua-json
+#   # Bug in Ubuntu, https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=891541
+#   #ln -s /usr/lib/x86_64-linux-gnu/lua/5.1/posix_c.so /usr/lib/x86_64-linux-gnu/lua/5.1/posix.so
+#   ln -s /usr/lib/x86_64-linux-gnu/libtcl8.6.so /usr/lib/x86_64-linux-gnu/libtcl8.5.so
+
+    echo "
+if [ -f /uufs/chpc.utah.edu/sys/etc/profile.d/module.sh ]
+then
+   . /uufs/chpc.utah.edu/sys/etc/profile.d/module.sh
+fi
+   " > /etc/profile.d/91-chpc.sh
+
+    echo "
+. /etc/profile.d/91-chpc.sh
+" >> /etc/bash.bashrc
+
+%environment    
+PATH=/usr/local/bin:$PATH
+LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+%test
+    # Sanity check that the container is operating
+    # make sure that numpy is using openblas
