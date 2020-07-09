@@ -393,6 +393,9 @@ Heres a list of apps that we have:
 * [Matlab](https://github.com/CHPC-UofU/bc_osc_matlab)
 * [ANSYS Workbench](https://github.com/CHPC-UofU/bc_osc_ansys_workbench)
 * [RStudio Server](https://github.com/CHPC-UofU/bc_osc_rstudio_server)
+* [COMSOL](https://github.com/CHPC-UofU/bc_osc_comsol)
+* [Abaqus](https://github.com/CHPC-UofU/bc_osc_abaqus)
+* [R Shiny](https://github.com/CHPC-UofU/bc_osc_example_shiny)
 
 There are a few other apps that OSC has but they either need GPUs which we dont have on our interactive test nodes (VMD, Paraview), or, are licensed with group based licenses for us (COMSOL, Abaqus). We may look in the future to restrict access to these apps to the licensed groups.
 
