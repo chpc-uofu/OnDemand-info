@@ -201,7 +201,7 @@ and then remove that line from the fstab. This will disjoin httpd24 that OOD use
 ```
 yum -y install epel-release
 ```
- # this is likely already in place, but just be sure you have epel as thats where mod_auth_cas comes from
+this is likely already in place, but just be sure you have epel as thats where mod_auth_cas comes from
 ```
 yum -y install mod_auth_cas
 ```
