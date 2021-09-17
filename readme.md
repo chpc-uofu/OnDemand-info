@@ -192,28 +192,44 @@ Note: The default Java memory on the Keycloak service is fairly low, our machine
 
 Campus authentication which in our case includes DUO.
 
+If upgrading from previous authentication, first
+```
 umount -l /opt/rh/httpd24/root/etc/httpd
-and then remove that line from the fstab
+```
+and then remove that line from the fstab. This will disjoin httpd24 that OOD uses from httpd that the mod_auth_cas has as a dependency.
 
-yum -y install epel-release # this is likely already in place, but just be sure you have epel as thats where mod_auth_cas comes from
+```
+yum -y install epel-release
+```
+ # this is likely already in place, but just be sure you have epel as thats where mod_auth_cas comes from
+```
 yum -y install mod_auth_cas
+```
 (this pulls in an unnecessary dependency of httpd, because OOD uses httpd24-httpd, just make sure httpd stays disabled)
+
 verify httpd is disabled in systemd. 
+```
 ln -s /etc/httpd/conf.modules.d/10-auth_cas.conf /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-auth_cas.conf
 ln -s /usr/lib64/httpd/modules/mod_auth_cas.so /opt/rh/httpd24/root/etc/httpd/modules/mod_auth_cas.so
 ln -s /etc/httpd/conf.d/auth_cas.conf /opt/rh/httpd24/root/etc/httpd/conf.d/auth_cas.conf
+```
 
-cat auth_cas.conf:
+The configuration files:
+```
+cat auth_cas.conf
 CASCookiePath /opt/rh/httpd24/root/var/cache/httpd/mod_auth_cas/
 CASLoginURL https://go.utah.edu/cas/login
 CASValidateURL https://go.utah.edu/cas/serviceValidate
+```
 
-/etc/ood/config/ood_portal.yml:
+And in `/etc/ood/config/ood_portal.yml:`
+```
 auth:
 - 'AuthType CAS'
 - 'Require valid-user'
 - 'CASScope /'
 - 'RequestHeader unset Authorization'
+```
 
 ### Apache configuration 
 
