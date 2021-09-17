@@ -1,0 +1,4 @@
+---
+title: "Redwood Desktop"
+cluster: "redwood"
+submit: "submit/slurm.yml.erb"

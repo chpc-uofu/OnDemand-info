@@ -1,0 +1,5 @@
+en:
+ dashboard:
+  quota_reload_message: "Reload page to see updated quota. Quotas are updated every hour."
+  welcome_html: |
+

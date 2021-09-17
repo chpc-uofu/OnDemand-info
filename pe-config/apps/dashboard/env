@@ -1,26 +1,24 @@
-OOD_DASHBOARD_TITLE="CHPC OnDemand"
-OOD_PORTAL="ondemand"
+OOD_DASHBOARD_TITLE="CHPC PE OnDemand"
+OOD_PORTAL="pe-ondemand"
 
 #BOOTSTRAP_NAVBAR_INVERSE_BG='rgb(200,16,46)'
 #BOOTSTRAP_NAVBAR_INVERSE_LINK_COLOR='rgb(255,255,255)'
 OOD_NAVBAR_TYPE=default
 
 
-#MOTD_PATH="/etc/motd"
 MOTD_PATH="/etc/ood/config/announcement.md.motd"
 MOTD_FORMAT="markdown" # markdown, txt, rss
 
 # header logo
-#OOD_DASHBOARD_HEADER_IMG_LOGO="/public/chpc_logo_block.png"
 OOD_DASHBOARD_HEADER_IMG_LOGO="/public/CHPC-logo.png"
 # logo in the main window
-# OOD_DASHBOARD_LOGO="/public/chpc_logo_block.png"
 OOD_DASHBOARD_SUPPORT_URL="http://www.chpc.utah.edu/about/contact.php"
 OOD_DASHBOARD_SUPPORT_EMAIL="helpdesk@chpc.utah.edu"
 OOD_DASHBOARD_DOCS_URL="https://www.chpc.utah.edu/documentation/software/ondemand.php"
 OOD_DASHBOARD_PASSWD_URL="https://www.acs.utah.edu/uofu/acs/uupasswd/portal/password/selfservice/ForgottenPasswordHelp.jsp"
 
-OOD_QUOTA_PATH="https://www.chpc.utah.edu/apps/systems/curl_post/quota.json"
+# quota are only for general, for PE a different file?
+OOD_QUOTA_PATH="https://www.chpc.utah.edu/apps/systems/curl_post/pequota.json"
 OOD_QUOTA_THRESHOLD="0.90"
 
 

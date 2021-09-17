@@ -32,8 +32,7 @@
 # Below is an example of the use for setting env vars.
 #
 pun_custom_env:
-  OOD_XDMOD_HOST: "https://xdmod.chpc.utah.edu"
-#   OOD_JOB_NAME_ILLEGAL_CHARS: "/"
+  OOD_XDMOD_HOST: "https://pe-xdmod.chpc.utah.edu"
 #   OOD_DASHBOARD_TITLE: "Open OnDemand"
 #   OOD_BRAND_BG_COLOR: "#53565a"
 #   OOD_BRAND_LINK_ACTIVE_BG_COLOR: "#fff"
@@ -92,6 +91,20 @@ pun_custom_env:
 #
 #passenger_python: '/opt/ood/nginx_stage/bin/python'
 
+# The maximum number of seconds that an application process may be idle.
+# Set to `false` if you don't want this specified in the nginx config
+#
+#passenger_pool_idle_time: 300
+
+# Hash of Passenger configuration options
+# Keys without passenger_ prefix will be ignored
+#
+#passenger_options: {}
+
+# Max file upload size in bytes (e.g., 10737420000)
+#
+#nginx_file_upload_max: '10737420000'
+
 # Root location of per-user NGINX configs
 #
 #pun_config_path: '/var/lib/ondemand-nginx/config/puns/%{user}.conf'
@@ -107,6 +120,10 @@ pun_custom_env:
 # Path to the per-user NGINX error log
 #
 #pun_error_log_path: '/var/log/ondemand-nginx/%{user}/error.log'
+
+# Custom format configuration for access log
+#
+#pun_log_format: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'
 
 # Path to the per-user NGINX pid file
 #

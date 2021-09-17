@@ -9,6 +9,7 @@ Table of Contents
       * [Authentication](#authentication)
          * [LDAP](#ldap)
          * [Keycloak](#keycloak)
+         * [CAS](#cas)
       * [Apache configuration](#apache-configuration)
       * [Cluster configuration files](#cluster-configuration-files)
       * [Job templates](#job-templates)
@@ -186,6 +187,33 @@ Everything else default
 Under user Federation > Ldap > LDAP Mappers I had to switch username to map to sAMAccountName
 
 Note: The default Java memory on the Keycloak service is fairly low, our machine got wedged presumably because of that, so we bumped up the memory settings for Java from xms64m xm512m to xms1024m xmx2048m.
+
+#### CAS
+
+Campus authentication which in our case includes DUO.
+
+umount -l /opt/rh/httpd24/root/etc/httpd
+and then remove that line from the fstab
+
+yum -y install epel-release # this is likely already in place, but just be sure you have epel as thats where mod_auth_cas comes from
+yum -y install mod_auth_cas
+(this pulls in an unnecessary dependency of httpd, because OOD uses httpd24-httpd, just make sure httpd stays disabled)
+verify httpd is disabled in systemd. 
+ln -s /etc/httpd/conf.modules.d/10-auth_cas.conf /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-auth_cas.conf
+ln -s /usr/lib64/httpd/modules/mod_auth_cas.so /opt/rh/httpd24/root/etc/httpd/modules/mod_auth_cas.so
+ln -s /etc/httpd/conf.d/auth_cas.conf /opt/rh/httpd24/root/etc/httpd/conf.d/auth_cas.conf
+
+cat auth_cas.conf:
+CASCookiePath /opt/rh/httpd24/root/var/cache/httpd/mod_auth_cas/
+CASLoginURL https://go.utah.edu/cas/login
+CASValidateURL https://go.utah.edu/cas/serviceValidate
+
+/etc/ood/config/ood_portal.yml:
+auth:
+- 'AuthType CAS'
+- 'Require valid-user'
+- 'CASScope /'
+- 'RequestHeader unset Authorization'
 
 ### Apache configuration 
 
@@ -398,6 +426,30 @@ Heres a list of apps that we have:
 * [R Shiny](https://github.com/CHPC-UofU/bc_osc_example_shiny)
 
 There are a few other apps that OSC has but they either need GPUs which we dont have on our interactive test nodes (VMD, Paraview), or, are licensed with group based licenses for us (COMSOL, Abaqus). We may look in the future to restrict access to these apps to the licensed groups.
+
+### E-mail address input
+
+To have the receive e-mail on session start check box working, we need to supply valid e-mail address. This is done in `submit.yml.erb` of each job app. There does not appear to be an option to set this globally.
+
+One possibility is to feed in the $USER based utah.edu e-mail via SLURMs `--mail-user` argument, 
+```
+script:
+  ...
+  native:
+    - "--mail-user=<%= ENV["USER"] %>@utah.edu"
+```
+The other is to get the user e-mail address from our database:
+```
+<%-
+  emailcmd = '/uufs/chpc.utah.edu/sys/bin/CHPCEmailLookup.sh' + ENV["USER"]
+  emailaddr = %x[ #{emailcmd}]
+-%>
+...
+script:
+  <%#  - "--mail-user=<%= emailaddr %>" %>
+```
+
+We currently use the latter approach which allows for non utah.edu e-mail addresses, but relies on up to date user information in our database.
 
 ### SLURM partitions in the interactive apps
 

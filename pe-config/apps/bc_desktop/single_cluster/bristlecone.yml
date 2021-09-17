@@ -1,0 +1,10 @@
+---
+title: "Frisco Desktop"
+cluster: "frisco"
+submit: "linux_host"
+attributes:
+  bc_queue: null
+  bc_account: null
+  bc_num_slots: 1
+  num_cores: none
+

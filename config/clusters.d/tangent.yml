@@ -2,12 +2,16 @@
 v2:
   metadata:
     title: "Tangent"
+    priority: 5
   login:
     host: "tangent.chpc.utah.edu"
   job:
     adapter: "slurm"
     cluster: "tangent"
     bin: "/uufs/tangent.peaks/sys/pkg/slurm/std/bin"
+  custom:
+    xdmod:
+      resource_id: 33
   batch_connect:
     basic:
       script_wrapper: |
@@ -16,7 +20,7 @@ v2:
         fi
         export XDG_RUNTIME_DIR=$(mktemp -d)
         %s
-      set_host: "host=$(hostname -A | awk '{print $1}')"
+      set_host: "host=$(/uufs/chpc.utah.edu/sys/bin/hostfromroute.sh ondemand.chpc.utah.edu)"
     vnc:
       script_wrapper: |
         if [ -z "$LMOD_VERSION" ]; then
@@ -26,5 +30,5 @@ v2:
         export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
         export XDG_RUNTIME_DIR=$(mktemp -d)
         %s
-      set_host: "host=$(hostname -A | awk '{print $2}')"
+      set_host: "host=$(/uufs/chpc.utah.edu/sys/bin/hostfromroute.sh ondemand.chpc.utah.edu)"
 

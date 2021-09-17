@@ -2,6 +2,7 @@
 v2:
   metadata:
     title: "Kingspeak"
+    priority: 1
   login:
     host: "kingspeak.chpc.utah.edu"
   job:
@@ -9,6 +10,8 @@ v2:
     cluster: "kingspeak"
     bin: "/uufs/kingspeak.peaks/sys/pkg/slurm/std/bin"
   custom:
+    xdmod:
+      resource_id: 16
     queues:
       - "kingspeak"
       - "kingspeak-guest"
@@ -20,8 +23,10 @@ v2:
            source /etc/profile.d/chpc.sh
         fi
         export XDG_RUNTIME_DIR=$(mktemp -d)
+        # reset SLURM_EXPORT_ENV so that things like srun & sbatch have the same environment as the host
+        export SLURM_EXPORT_ENV=ALL
         %s
-      set_host: "host=$(hostname -A | awk '{print $2}')"
+      set_host: "host=$(/uufs/chpc.utah.edu/sys/bin/hostfromroute.sh ondemand.chpc.utah.edu)"
     vnc:
       script_wrapper: |
         if [ -z "$LMOD_VERSION" ]; then
@@ -30,6 +35,8 @@ v2:
         export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
         export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
         export XDG_RUNTIME_DIR=$(mktemp -d)
+        # reset SLURM_EXPORT_ENV so that things like srun & sbatch have the same environment as the host
+        export SLURM_EXPORT_ENV=ALL
         %s
-      set_host: "host=$(hostname -A | awk '{print $2}')"
+      set_host: "host=$(/uufs/chpc.utah.edu/sys/bin/hostfromroute.sh ondemand.chpc.utah.edu)"
 

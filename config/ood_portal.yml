@@ -11,9 +11,9 @@
 
 # The server name used for name-based Virtual Host
 # Example:
-servername: 'ondemand-test.chpc.utah.edu'
+#     servername: 'www.example.com'
 # Default: null (don't use name-based Virtual Host)
-#servername: null
+servername: ondemand.chpc.utah.edu
 
 # The port specification for the Virtual Host
 # Example:
@@ -29,10 +29,9 @@ servername: 'ondemand-test.chpc.utah.edu'
 # Default: null (no SSL support)
 #ssl: null
 ssl:
- - 'SSLCertificateFile           /etc/httpd/conf/ssl/ondemand-test_chpc_utah_edu_cert.cer'
- - 'SSLCertificateKeyFile        /etc/httpd/conf/ssl/ondemand-test.chpc.utah.edu.key'
- - 'SSLCertificateChainFile      /etc/httpd/conf/ssl/intermediate.cer'
-
+  - 'SSLCertificateFile "/etc/letsencrypt/live/ondemand.chpc.utah.edu/fullchain.pem"'
+  - 'SSLCertificateKeyFile "/etc/letsencrypt/live/ondemand.chpc.utah.edu/privkey.pem"'
+  - 'Include "/root/ssl/ssl-standard.conf"'
 
 # Root directory of log files (can be relative ServerRoot)
 # Example:
@@ -49,22 +48,15 @@ ssl:
 # Verbosity of the Lua module logging
 # (see https://httpd.apache.org/docs/2.4/mod/core.html#loglevel)
 # Example:
-#     lua_log_level: 'warn'
-# Default: 'info' (get verbose logs)
-#lua_log_level: 'info'
+#     lua_log_level: 'info'
+# Default: null (use default log level)
+#lua_log_level: null
 
 # System command used to map authenticated-user to system-user
 # Example:
 #     user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex --regex=''^(\w+)@example.com$'''
 # Default: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex' (this echo's back auth-user)
 #user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex'
-
-# Use an alternative CGI environment variable instead of REMOTE_USER for
-# determining the authenticated-user fed to the mapping script
-# Example:
-#     user_env: 'OIDC_CLAIM_preferred_username'
-# Default: null (use REMOTE_USER)
-#user_env: null
 
 # Redirect user to the following URI if fail to map there authenticated-user to
 # a system-user
@@ -82,15 +74,9 @@ ssl:
 # List of Apache authentication directives
 # NB: Be sure the appropriate Apache module is installed for this
 # Default: (see below, uses basic auth with an htpasswd file)
-#auth:
-#  - 'AuthType Basic'
-#  - 'AuthName "private"'
-#  - 'AuthUserFile "/opt/rh/httpd24/root/etc/httpd/.htpasswd"'
-#  - 'RequestHeader unset Authorization'
-#  - 'Require valid-user'
 auth:
- - 'AuthType openid-connect'
- - 'Require valid-user'
+  - 'AuthType openid-connect'
+  - 'Require valid-user'
 
 # Redirect user to the following URI when accessing root URI
 # Example:
@@ -103,9 +89,9 @@ root_uri: '/pun/sys/dashboard'
 # (see https://github.com/OSC/mod_ood_proxy/blob/master/lib/analytics.lua for
 # information on how to setup the GA property)
 # Example:
-#     analytics:
-#       url: 'http://www.google-analytics.com/collect'
-#       id: 'UA-79331310-4'
+analytics:
+  url: 'http://www.google-analytics.com/collect'
+  id: 'UA-122259839-1'
 # Default: null (do not track)
 #analytics: null
 
@@ -143,8 +129,7 @@ root_uri: '/pun/sys/dashboard'
 # Default: '/pun/sys/dashboard/logout' (the Dashboard app provides a simple
 # HTML page explaining logout to the user)
 #logout_redirect: '/pun/sys/dashboard/logout'
-logout_redirect: '/oidc?logout=https%3A%2F%2Fondemand-test.chpc.utah.edu'
-
+logout_redirect: '/oidc?logout=https%3A%2F%2Fondemand.chpc.utah.edu'
 
 #
 # Reverse proxy to backend nodes
@@ -155,8 +140,11 @@ logout_redirect: '/oidc?logout=https%3A%2F%2Fondemand-test.chpc.utah.edu'
 #     host_regex: '[\w.-]+\.example\.com'
 # Default: '[^/]+' (allow reverse proxying to all hosts, this allows external
 # hosts as well)
-#host_regex: '[^/]+'
+#host_regex: '^(.*?)(peaks|arches)$'
 host_regex: '[\w.-]+\.(peaks|arches|int.chpc.utah.edu|chpc.utah.edu)'
+#the above works through grep, e.g. on em163: hostname -A | awk '{print $2}' | grep -E '^(.*?)(peaks|arches)$'
+#host_regex: '[^/]+'
+#host_regex: "(sp|kp|em|lp|ash|tg)\\d+"
 
 # Sub-uri used to reverse proxy to backend web server running on node that
 # knows the full URI path
@@ -192,8 +180,8 @@ rnode_uri: '/rnode'
 # connect to
 # Example:
 #     pun_socket_root: '/path/to/pun/sockets'
-# Default: '/var/run/ondemand-nginx' (default location set in nginx_stage)
-#pun_socket_root: '/var/run/ondemand-nginx'
+# Default: '/var/run/nginx' (default location set in nginx_stage)
+#pun_socket_root: '/var/run/nginx'
 
 # Number of times the proxy attempts to connect to the PUN Unix socket before
 # giving up and displaying an error to the user
@@ -210,8 +198,7 @@ rnode_uri: '/rnode'
 # Example:
 #     oidc_uri: '/oidc'
 # Default: null (disable OpenID Connect support)
-#oidc_uri: null
-oidc_uri: '/oidc'
+oidc_uri: /oidc
 
 # Sub-uri user is redirected to if they are not authenticated. This is used to
 # *discover* what ID provider the user will login through.
@@ -246,3 +233,10 @@ oidc_uri: '/oidc'
 #     register_root: '/var/www/ood/register'
 # Default: null (display error to user if mapping fails)
 #register_root: null
+
+# Enabling maintenance mode
+use_rewrites: true
+use_maintenance: true
+# maintenance_ip_whitelist:
+  # examples only! Your ip regular expressions will be specific to your site.
+ # - '155.101.16.75'

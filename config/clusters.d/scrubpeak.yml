@@ -9,6 +9,8 @@ v2:
     cluster: "scrubpeak"
     bin: "/uufs/scrubpeak.peaks/sys/pkg/slurm/std/bin"
   custom:
+    xdmod:
+      resource_id: 32
     queues:
       - "scrubpeak"
       - "scrubpeak-shared"
