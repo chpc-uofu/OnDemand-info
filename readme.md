@@ -192,6 +192,9 @@ Note: The default Java memory on the Keycloak service is fairly low, our machine
 
 Campus authentication which in our case includes DUO.
 
+First request CAS access from IAM for the new OOD server:
+[https://uofu.service-now.com/it?id=uu_catalog_item&sys_id=40338e0d945991007c6da33495dbb00c](https://uofu.service-now.com/it?id=uu_catalog_item&sys_id=40338e0d945991007c6da33495dbb00c)
+
 If upgrading from previous authentication, first
 ```
 umount -l /opt/rh/httpd24/root/etc/httpd
@@ -216,7 +219,7 @@ ln -s /etc/httpd/conf.d/auth_cas.conf /opt/rh/httpd24/root/etc/httpd/conf.d/auth
 
 The configuration files:
 ```
-cat auth_cas.conf
+cat /opt/rh/httpd24/root/etc/httpd/conf.d/auth_cas.conf
 CASCookiePath /opt/rh/httpd24/root/var/cache/httpd/mod_auth_cas/
 CASLoginURL https://go.utah.edu/cas/login
 CASValidateURL https://go.utah.edu/cas/serviceValidate
@@ -229,6 +232,16 @@ auth:
 - 'Require valid-user'
 - 'CASScope /'
 - 'RequestHeader unset Authorization'
+```
+
+Build and install new Apache configuration
+```
+sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
+```
+
+Restart Apache:
+```
+sudo systemctl restart httpd24-httpd
 ```
 
 ### Apache configuration 
