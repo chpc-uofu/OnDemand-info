@@ -195,11 +195,11 @@ Campus authentication which in our case includes DUO.
 First request CAS access from IAM for the new OOD server:
 [https://uofu.service-now.com/it?id=uu_catalog_item&sys_id=40338e0d945991007c6da33495dbb00c](https://uofu.service-now.com/it?id=uu_catalog_item&sys_id=40338e0d945991007c6da33495dbb00c)
 
-If upgrading from previous authentication, first
+If upgrading from previous authentication, `/etc/httpd points` to `/opt/rh/httpd24/root/etc/httpd`. First
 ```
-umount -l /opt/rh/httpd24/root/etc/httpd
+cd /etc/
+rm httpd
 ```
-and then remove that line from the fstab. This will disjoin httpd24 that OOD uses from httpd that the mod_auth_cas has as a dependency.
 
 ```
 yum -y install epel-release
@@ -211,20 +211,35 @@ yum -y install mod_auth_cas
 (this pulls in an unnecessary dependency of httpd, because OOD uses httpd24-httpd, just make sure httpd stays disabled)
 
 verify httpd is disabled in systemd. 
+
+Then re-establish the `httpd` links:
+
 ```
-ln -s /etc/httpd/conf.modules.d/10-auth_cas.conf /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-auth_cas.conf
+ln -s /opt/rh/httpd24/root/etc/httpd /etc/httpd
 ln -s /usr/lib64/httpd/modules/mod_auth_cas.so /opt/rh/httpd24/root/etc/httpd/modules/mod_auth_cas.so
-ln -s /etc/httpd/conf.d/auth_cas.conf /opt/rh/httpd24/root/etc/httpd/conf.d/auth_cas.conf
+ln -s /var/cache/httpd/mod_auth_cas /opt/rh/httpd24/root/var/cache/httpd/mod_auth_cas
 ```
 
 The configuration files:
 ```
-cat /opt/rh/httpd24/root/etc/httpd/conf.d/auth_cas.conf
+$ cat /opt/rh/httpd24/root/etc/httpd/conf.d/auth_cas.conf
 CASCookiePath /opt/rh/httpd24/root/var/cache/httpd/mod_auth_cas/
 CASLoginURL https://go.utah.edu/cas/login
 CASValidateURL https://go.utah.edu/cas/serviceValidate
 ```
+```
+$ cat /etc/httpd/conf.modules.d/10-auth_cas.conf
+#
+# mod_auth_cas is an Apache 2.2/2.4 compliant module that supports the
+# CASv1 and CASv2 protocols
+#
+<IfModule !ssl_module>
+    LoadModule ssl_module modules/mod_ssl.so
+</IfModule>
 
+LoadModule auth_cas_module modules/mod_auth_cas.so
+
+```
 And in `/etc/ood/config/ood_portal.yml:`
 ```
 auth:
