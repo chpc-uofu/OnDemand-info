@@ -212,12 +212,14 @@ yum -y install mod_auth_cas
 
 verify httpd is disabled in systemd. 
 
-Then re-establish the `httpd` links:
-
+Move away the httpd installed as the mod_auth_cas dependencyi and establish the right links to httpd24:
 ```
+mv httpd/ httpd-old-httpd
 ln -s /opt/rh/httpd24/root/etc/httpd /etc/httpd
-ln -s /usr/lib64/httpd/modules/mod_auth_cas.so /opt/rh/httpd24/root/etc/httpd/modules/mod_auth_cas.so
+mkdir -p /var/cache/httpd/mod_auth_cas
 ln -s /var/cache/httpd/mod_auth_cas /opt/rh/httpd24/root/var/cache/httpd/mod_auth_cas
+chmod a+rx /opt/rh/httpd24/root/var/cache/httpd/mod_auth_cas
+ln -s /usr/lib64/httpd/modules/mod_auth_cas.so /opt/rh/httpd24/root/etc/httpd/modules/mod_auth_cas.so
 ```
 
 The configuration files:
