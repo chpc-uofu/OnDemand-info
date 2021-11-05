@@ -21,6 +21,7 @@ Table of Contents
       * [Other interactive apps](#other-interactive-apps)
       * [SLURM partitions in the interactive apps](#slurm-partitions-in-the-interactive-apps)
       * [Google Analytics](#google-analytics)
+      * [Impersonation](#impersonation)
 
 
 ## Useful links
@@ -515,3 +516,42 @@ analytics:
 ```
 * rebuild and reinstall Apache configuration file by running ```sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal```.
 * restart Apache, on CentOS 7: ```sudo systemctl try-restart httpd24-httpd.service httpd24-htcacheclean.service```.
+
+### Impersonation
+
+Impersonation allows one to log in as yourself but in the OOD portal be another user. This could be useful in troubleshooting OOD problems.
+
+We follow instructions from [Yale](https://github.com/ycrc/ood-user-mapping).
+
+In particular, first clone their repository:
+```
+cd /uufs/chpc.utah.edu/common/home/u0101881/ondemand/repos/
+git clone https://github.com/ycrc/ood-user-mapping
+```
+
+Then on the OOD server:
+```
+cd /opt/ood
+cp -r /uufs/chpc.utah.edu/common/home/u0101881/ondemand/repos/ood-user-mapping/ycrc_auth_map customized_auth_map
+patch -u /opt/ood/ood-portal-generator/templates/ood-portal.conf.erb -i /uufs/chpc.utah.edu/common/home/u0101881/ondemand/repos/ood-user-mapping/ood-portal.conf.erb.patch 
+```
+
+Add the following line to ```/etc/ood/config/ood-portal.yml```:
+```
+user_map_cmd: '/opt/ood/customized_auth_map/bin/ood_auth_map.regex'
+```
+
+Regenerate Apache config and restart it:
+```
+/opt/ood/ood-portal-generator/sbin/update_ood_portal
+systemctl try-restart httpd24-httpd.service httpd24-htcacheclean.service
+```
+
+Then, to impersonate an user, map the users ID to your ID, in `/etc/ood/config/map_file` that is editable only by root = contact Martin or Steve to do it. The format of the file is:
+```
+"your_unid" user_unid
+```
+e.g.
+```
+"u0012345" u0123456
+```
