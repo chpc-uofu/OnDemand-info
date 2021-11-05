@@ -521,6 +521,8 @@ analytics:
 
 Impersonation allows one to log in as yourself but in the OOD portal be another user. This could be useful in troubleshooting OOD problems.
 
+At present we have this functional only on `ondemand-test.chpc.utah.edu`, but, if we do not notice any issues it will be put on the production servers.
+
 We follow instructions from [Yale](https://github.com/ycrc/ood-user-mapping).
 
 In particular, first clone their repository:
