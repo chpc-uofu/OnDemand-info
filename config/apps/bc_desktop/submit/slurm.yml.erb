@@ -1,8 +1,9 @@
 ---
 script:
-  native: 
+  <%- if /frisco/.match(cluster) == nil -%>
+  native:
     - "-N"
     - "<%= bc_num_slots %>"
     - "-n"
     - "<%= num_cores %>"
-
+  <%- end -%>

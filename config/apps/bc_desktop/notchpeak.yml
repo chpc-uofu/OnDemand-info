@@ -1,4 +1,0 @@
----
-title: "Notchpeak Desktop"
-cluster: "notchpeak"
-submit: "submit/slurm.yml.erb"

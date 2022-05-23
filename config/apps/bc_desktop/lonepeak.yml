@@ -1,4 +1,0 @@
----
-title: "Lonepeak Desktop"
-cluster: "lonepeak"
-submit: "submit/slurm.yml.erb"

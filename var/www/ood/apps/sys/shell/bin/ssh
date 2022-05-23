@@ -1,0 +1,6 @@
+#!/bin/bash
+
+args="-o ConnectTimeout=7200"
+
+exec /usr/bin/ssh "$args" "$@"
+
