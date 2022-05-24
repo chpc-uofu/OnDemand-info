@@ -7,7 +7,10 @@ OodFilesApp.candidate_favorite_paths.tap do |paths|
 
   # add scratch space directories
   paths << Pathname.new("/scratch/kingspeak/serial/#{User.new.name}")
+  paths << Pathname.new("/scratch/ucgd/serial/#{User.new.name}")
+  paths << Pathname.new("/scratch/general/nfs1/#{User.new.name}")
   paths << Pathname.new("/scratch/general/lustre/#{User.new.name}")
+  paths << Pathname.new("/scratch/general/vast/#{User.new.name}")
   
   # group dir based on user's main group
   #project = OodSupport::User.new.group.name

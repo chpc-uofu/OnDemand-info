@@ -8,12 +8,12 @@ up to and including
 [setting up SSL](https://osc.github.io/ood-documentation/latest/installation/add-ssl.html)
 
 Sysadmin additions to that on the top of this:
-- !!!! copy SSH host keys in /etc/ssh from old servers before they are re-built
-- !!!! in /etc/ssh/ssh_config.d/00-chpc-config on OOD servers enable host based authentication
+- copy SSH host keys in /etc/ssh from old servers before they are re-built
+- in /etc/ssh/ssh_config.d/00-chpc-config on OOD servers enable host based authentication
 - add all cluster file systems mounts
 - install maria-db-server to allow resolveip - used to find compute node hostname by OOD (hostfromroute.sh)
-- !!!! add all HPC scratch mounts
-- !!!! passwordless ssh to all interactive nodes
+- add all HPC scratch mounts
+- passwordless ssh to all interactive nodes
 - Modify `/etc/security/access.conf` to add: ```+:ALL:LOCAL```
 
 ## Further installation
@@ -36,6 +36,8 @@ $ make check
 $ make install
 ```
 
+or `install_scripts/build_cas.sh`
+
 Further setup of CAS
 ```
 $ mkdir -p /var/cache/httpd/mod_auth_cas
@@ -49,6 +51,8 @@ CASLoginURL https://go.utah.edu/cas/login
 CASValidateURL https://go.utah.edu/cas/serviceValidate
 ```
 
+or `install_scripts/setup_cas.sh`
+
 ### Base OOD config and start Apache
 
 OOD base config files:
@@ -56,6 +60,7 @@ OOD base config files:
 # cd /etc/ood/config
 # cp ood_portal.yml  ood_portal.yml.org
 # scp u0101881@ondemand.chpc.utah.edu:/etc/ood/config/ood_portal.yml .
+OR # wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/config/ood_portal.yml
 # vi ood_portal.yml
 ```
 - search for "ondemand.chpc.utah.edu", replace with "ondemand-test.chpc.utah.edu"
@@ -106,6 +111,8 @@ Check that the Server MPM is event:
 # /sbin/httpd -V
 ```
 
+or `install_scripts/check_apache_config.sh`
+
 ### SLURM setup
 
 ```
@@ -142,8 +149,14 @@ Dashboard, incl. logos, quota warnings,...
 ```
 # mkdir -p /etc/ood/config/apps/dashboard/initializers/
 # scp -r u0101881@ondemand.chpc.utah.edu:/etc/ood/config/apps/dashboard/initializers/ood.rb /etc/ood/config/apps/dashboard/initializers/
-# cp -r u0101881@ondemand.chpc.utah.edu:/etc/ood/config/apps/dashboard/env /etc/ood/config/apps/dashboard
+# scp -r u0101881@ondemand.chpc.utah.edu:/etc/ood/config/apps/dashboard/env /etc/ood/config/apps/dashboard
 ```
+
+Test disk quota
+```
+vi /etc/ood/config/apps/dashboard/env
+```
+temporarily modify `OOD_QUOTA_THRESHOLD="0.10"`, in OOD web interface Restart Web Server to verify that the quota warnings appear.
 
 Active jobs environment
 ```
@@ -158,7 +171,7 @@ Base apps configs
 # scp u0101881@ondemand.chpc.utah.edu:/var/www/ood/apps/sys/shell/bin/ssh /var/www/ood/apps/sys/shell/bin/
 ```
 
-Announcements
+Announcements, XdMoD
 ```
 # scp -r u0101881@ondemand.chpc.utah.edu:/etc/ood/config/announcement.md.motd /etc/ood/config/
 # scp -r u0101881@ondemand.chpc.utah.edu:/etc/ood/config/nginx_stage.yml /etc/ood/config/
@@ -176,7 +189,9 @@ SLURM job templates
 # ln -s /uufs/chpc.utah.edu/sys/ondemand/chpc-myjobs-templates /etc/ood/config/apps/myjobs/templates
 ```
 
-Apps
+OR `install_scripts/get_customizations.sh`
+
+### Apps setup
 ```
 # /uufs/chpc.utah.edu/sys/ondemand/chpc-apps/update.sh
 # cd /var/www/ood/apps/sys
@@ -185,8 +200,11 @@ Apps
 # cd /var/www/ood/apps
 # ln -s /uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates templates
 # cd /var/www/ood/apps/templates
+# source /etc/profile.d/chpc.sh
 # ./genmodulefiles.sh
 ```
+
+OR `install_scripts/get_apps.sh`
 
 Restart web server in the client to see all the Interactive Apps. If seen proceed to testing the apps.
 Including check cluster status app.
