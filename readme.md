@@ -511,8 +511,8 @@ We have a number of SLURM partitions where an user can run. It can be hard to re
 
 The following is a first step in the process to make available only accounts/partitions that the user has access to. It provides pull-downs with that list the accounts/partitions, but, does not tie them together or to the cluster.
 
-First, we create three arrays, listing the clusters, accounts and allocations. This is done by modification of `/etc/ood/config/apps/dashboard/initializers/ood.rb` and involves:
-- running a script, `/var/www/ood/apps/templates/get_allocations.sh`. that calls the `myallocations` command and parses the output to create 3 files in user's `~/ondemand/data` directory, `cluster.txt`, `account.txt` and `partition.txt`
+First, we create three arrays, listing the clusters, accounts and allocations. This is done by modification of [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) and involves:
+- running a script, [`/var/www/ood/apps/templates/get_allocations.sh`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/get_allocations.sh). that calls the `myallocations` command and parses the output to create 3 files in user's `~/ondemand/data` directory, `cluster.txt`, `account.txt` and `partition.txt`
 - reading these three text files and filling in three arrays in the `CustomQueues` class, `clusters`, `accounts` and `partitions`.
 
 These three arrays are then used in the `form.yml.erb` that defines the interactive app's submission form, as this:
