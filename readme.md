@@ -440,6 +440,11 @@ In our CentOS 7 Mate dconf gives out warning that makes jobs output.log huge, to
 * open ```/var/www/ood/apps/sys/bc_desktop/template/script.sh.erb```
 * add ```export XDG_RUNTIME_DIR="/tmp/${UID}"``` or ```unset XDG_RUNTIME_DIR```
 
+To automatically start XFCE terminal when the remote desktop session starts, add the following to `template/desktops/xfce.sh`:
+```
+# this causes Terminal to automatically start in the desktop
+cp /usr/share/applications/xfce4-terminal.desktop "${AUTOSTART}"
+```
 
 ### Other interactive apps
 
@@ -501,6 +506,44 @@ We currently use the latter approach which allows for non utah.edu e-mail addres
 ### SLURM partitions in the interactive apps
 
 We have a number of SLURM partitions where an user can run. It can be hard to remember what partitions an user can access. We have a small piece of code that parses available user partitions and offers them as a drop-down menu. This app is at [Jupyter with dynamic partitions repo](https://github.com/CHPC-UofU/bc_jupyter_dynpart). In this repo, the ```static``` versions of the ```form.yml.erb``` and ```submit.yml.erb``` show all available cluster partitions.
+
+### SLURM accounts/partitions available to user
+
+The following is a first step in the process to make available only accounts/partitions that the user has access to. It provides pull-downs with that list the accounts/partitions, but, does not tie them together or to the cluster.
+
+First, we create three arrays, listing the clusters, accounts and allocations. This is done by modification of `/etc/ood/config/apps/dashboard/initializers/ood.rb` and involves:
+- running a script, `/var/www/ood/apps/templates/get_allocations.sh`. that calls the `myallocations` command and parses the output to create 3 files in user's `~/ondemand/data` directory, `cluster.txt`, `account.txt` and `partition.txt`
+- reading these three text files and filling in three arrays in the `CustomQueues` class, `clusters`, `accounts` and `partitions`.
+
+These three arrays are then used in the `form.yml.erb` that defines the interactive app's submission form, as this:
+```
+  custom_account:
+    label: "Account"
+    widget: select
+    options:
+      <%- CustomQueues.accounts.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+    value: "notchpeak-shared-short"
+    cacheable: true
+  custom_queue:
+    label: "Partition"
+    widget: select
+    options:
+      <%- CustomQueues.partitions.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+    cacheable: true
+    value: "notchpeak-shared-short"
+```
+Similarly for the clusters, though we also manually list all the Frisco nodes.
+
+In the `submit.yml.erb` we also need to tie the custom account and queue objects with those that OOD expects:
+```
+  accounting_id: "<%= custom_account %>"
+  queue_name: "<%= custom_queue %>"
+
+```
 
 ### Google Analytics
 

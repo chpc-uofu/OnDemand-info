@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Logo images
-wget https://github.com/CHPC-UofU/OnDemand-info/blob/master/var/www/ood/public/CHPC-logo35.png -O /var/www/ood/public/CHPC-logo35.png
-wget https://github.com/CHPC-UofU/OnDemand-info/blob/master/var/www/ood/public/CHPC-logo.png -O /var/www/ood/public/CHPC-logo.png
+wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/var/www/ood/public/CHPC-logo35.png -O /var/www/ood/public/CHPC-logo35.png
+wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/var/www/ood/public/CHPC-logo.png -O /var/www/ood/public/CHPC-logo.png
 wget https://github.com/CHPC-UofU/OnDemand-info/blob/master/var/www/ood/public/chpc_logo_block.png -O /var/www/ood/public/chpc_logo_block.png
 
 # Locales
@@ -25,7 +25,7 @@ wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/config/app
 wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/var/www/ood/apps/sys/shell/bin/ssh -O /var/www/ood/apps/sys/shell/bin/ssh
 
 #Announcements, XdMoD
-wget https://github.com/CHPC-UofU/OnDemand-info/edit/master/config/announcement.md.motd -O /etc/ood/config/announcement.md.motd 
+wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/config/announcement.md.motd -O /etc/ood/config/announcement.md.motd 
 wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/config/nginx_stage.yml -O /etc/ood/config/nginx_stage.yml
 
 #Widgets/pinned apps
