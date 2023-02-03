@@ -20,6 +20,7 @@ Table of Contents
       * [Interactive desktop](#interactive-desktop)
       * [Other interactive apps](#other-interactive-apps)
       * [SLURM partitions in the interactive apps](#slurm-partitions-in-the-interactive-apps)
+      * [SLURM accounts/partitions available to user](#slurm-accounts/partitions-available-to-user)
       * [Google Analytics](#google-analytics)
       * [Impersonation](#impersonation)
 
