@@ -20,7 +20,7 @@ Table of Contents
       * [Interactive desktop](#interactive-desktop)
       * [Other interactive apps](#other-interactive-apps)
       * [SLURM partitions in the interactive apps](#slurm-partitions-in-the-interactive-apps)
-      * [SLURM accounts/partitions available to user](#slurm-accounts/partitions-available-to-user)
+      * [SLURM accounts and partitions available to user](#slurm-accounts-and-partitions-available-to-user)
       * [Google Analytics](#google-analytics)
       * [Impersonation](#impersonation)
 
@@ -508,7 +508,7 @@ We currently use the latter approach which allows for non utah.edu e-mail addres
 
 We have a number of SLURM partitions where an user can run. It can be hard to remember what partitions an user can access. We have a small piece of code that parses available user partitions and offers them as a drop-down menu. This app is at [Jupyter with dynamic partitions repo](https://github.com/CHPC-UofU/bc_jupyter_dynpart). In this repo, the ```static``` versions of the ```form.yml.erb``` and ```submit.yml.erb``` show all available cluster partitions.
 
-### SLURM accounts/partitions available to user
+### SLURM accounts and partitions available to user
 
 The following is a first step in the process to make available only accounts/partitions that the user has access to. It provides pull-downs with that list the accounts/partitions, but, does not tie them together or to the cluster.
 
