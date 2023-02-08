@@ -21,8 +21,10 @@ wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/config/app
 # Base apps configs
 mkdir -p /etc/ood/config/apps/bc_desktop/submit
 wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/config/apps/bc_desktop/submit/slurm.yml.erb -O /etc/ood/config/apps/bc_desktop/submit/slurm.yml.erb
+mkdir -p /etc/ood/config/apps/shell
 wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/config/apps/shell/env -O /etc/ood/config/apps/shell/env
 wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/var/www/ood/apps/sys/shell/bin/ssh -O /var/www/ood/apps/sys/shell/bin/ssh
+chmod a+x /var/www/ood/apps/sys/shell/bin/ssh
 
 #Announcements, XdMoD
 wget https://raw.githubusercontent.com/CHPC-UofU/OnDemand-info/master/config/announcement.md.motd -O /etc/ood/config/announcement.md.motd 
