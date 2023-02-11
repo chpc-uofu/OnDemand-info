@@ -20,7 +20,11 @@ Table of Contents
       * [Interactive desktop](#interactive-desktop)
       * [Other interactive apps](#other-interactive-apps)
       * [SLURM partitions in the interactive apps](#slurm-partitions-in-the-interactive-apps)
-      * [SLURM accounts and partitions available to user](#slurm-accounts-and-partitions-available-to-user)
+      * [SLURM accounts and partitions available to user, part 1](#slurm-accounts-and-partitions-available-to-user-part-1)
+      * [SLURM accounts and partitions available to user, part 2](#slurm-accounts-and-partitions-available-to-user-part-2)
+      * [Auto-filling GPU information](#auto-filling-gpu-information)
+      * [Hiding job input fields when Frisco nodes are selected](#hiding-job-input-fields-when-frisco-nodes-are-selected)
+      * [Google Analytics](#google-analytics)
       * [Google Analytics](#google-analytics)
       * [Impersonation](#impersonation)
 
@@ -623,7 +627,7 @@ In the `submit.yml.erb` we then tie the `gpu_type` and `gpu_count` together as:
 
 ### Hiding job input fields when Frisco nodes are selected
 
-The Dynamic Form Widgets](https://osc.github.io/ood-documentation/latest/app-development/interactive/dynamic-form-widgets.html) also allow to hide fields, like account, walltime, etc, that are not needed for the Frisco jobs. Because the list of fields to hide is long and has to be done for each `frisco`, it's in a separate include file in the templates directory, [friscos_v2](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/friscos_v2). For each Frisco, the entry is:
+The [Dynamic Form Widgets](https://osc.github.io/ood-documentation/latest/app-development/interactive/dynamic-form-widgets.html) also allow to hide fields, like account, walltime, etc, that are not needed for the Frisco jobs. Because the list of fields to hide is long and has to be done for each `frisco`, it's in a separate include file in the templates directory, [friscos_v2](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/friscos_v2). For each Frisco, the entry is:
 ```
       - [
           'frisco1',
