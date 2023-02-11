@@ -12,7 +12,7 @@ All class apps are in `/uufs/chpc.utah.edu/sys/ondemand/chpc-class`. This direct
 
 ### Creating a class specific OOD app
 
-1. Decide if to use a Remote Desktop, Jupyter, RStudio Server, or a remote desktop based application (Matlab, Ansys, etc). These are the four basic classess of the apps.
+1. Decide if to use a Remote Desktop, Jupyter, RStudio Server, or a remote desktop based application (Matlab, Ansys, etc). These are the four basic classes of the apps.
 
 2. If Remote Desktop, Jupyter, or RStudio, pick one of the existing class apps, and copy it to a new directory. For the VNC based apps, one would have to create a new class app from the actual app, since we haven't done that yet. For Remote Desktop based app, use e.g. [ASTR5560](https://github.com/CHPC-UofU/OOD-class-apps/tree/master/ASTR5560), for Jupyter use [CHEN_Jupyter](https://github.com/CHPC-UofU/OOD-class-apps/tree/master/CHEN_Jupyter), for RStudio Server use [MIB2020](https://github.com/CHPC-UofU/OOD-class-apps/tree/master/MIB2020).
 
@@ -35,9 +35,14 @@ cp -r ASTR5560 ATMOS5120
 
 ### ChemEng custom conda environment
 
+The following lists the commands needed to install Miniconda for Chemical Engineering classes
+
+```
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash ./Miniconda3-latest-Linux-x86_64.sh -b -p /uufs/chpc.utah.edu/common/home/u0101881/software/pkg/miniconda3-cheng -s
-
+```
+Set up Lmod module as usual and load it. Then install the needed Python modules.
+```
 conda install numpy scipy pandas matplotlib
 conda install jupyter jupyterlab
 
@@ -46,7 +51,9 @@ conda install jupyterlab-plotly-extension plotly_express xlwings jupyter_contrib
 conda install keras
 
 conda install plotly plotly_express jupyterlab-plotly-extension nbconvert pyyaml xlwings cython jupyter_contrib_nbextensions rise
+```
 
 To overcome bug in nbconvert:
+```
 chmod 755 /uufs/chpc.utah.edu/common/home/u0101881/software/pkg/miniconda3-cheng/share/jupyter/nbconvert/templates/htm
-
+```

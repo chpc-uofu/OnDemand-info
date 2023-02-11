@@ -508,7 +508,7 @@ We currently use the latter approach which allows for non utah.edu e-mail addres
 
 We have a number of SLURM partitions where an user can run. It can be hard to remember what partitions an user can access. We have a small piece of code that parses available user partitions and offers them as a drop-down menu. This app is at [Jupyter with dynamic partitions repo](https://github.com/CHPC-UofU/bc_jupyter_dynpart). In this repo, the ```static``` versions of the ```form.yml.erb``` and ```submit.yml.erb``` show all available cluster partitions.
 
-### SLURM accounts and partitions available to user
+### SLURM accounts and partitions available to user, part 1
 
 The following is a first step in the process to make available only accounts/partitions that the user has access to. It provides pull-downs with that list the accounts/partitions, but, does not tie them together or to the cluster.
 
@@ -545,7 +545,112 @@ In the `submit.yml.erb` we also need to tie the custom account and queue objects
   queue_name: "<%= custom_queue %>"
 
 ```
+### SLURM accounts and partitions available to user, part 2
 
+This is a second step in the process to make available only accounts/partitions that the user has access to. There is one pull down with the `account:partition` combination, but it's provided for all clusters. Third step should make only partitions for each cluster available, this will require JavaScript `form.js`.
+
+First, we create two arrays, one for the clusters which we already have from step 1, and another which holds the allocation:partition information.. This is done by modification of [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) and involves:
+- running a script, [`/var/www/ood/apps/templates/get_alloc_by_cluster.sh`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/get_alloc_by_cluster.sh). that calls the `myallocations` command and parses the output to create one file per cluster in user's `~/ondemand/data` directory, e.g. `notchpeak.txt`, ...
+- reading these cluster based text files and filling an array in the `CustomAccPart` class, `accpart`.
+- the `CustomQueues` class from step 1 also needs to be executed but only the `clusters` array is needed.
+
+The `CustomQueues.clusters` and `CustomAccPart.accpart` are then used in the `form.yml.erb` that defines the interactive app's submission form, as this:
+```
+  cluster:
+    widget: select
+    options:
+      <%- CustomQueues.clusters.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+    value: "notchpeak"
+    cacheable: true
+    help: |
+      Select the cluster or Frisco node to create this session on.
+  custom_accpart:
+    label: "Account and partition"
+    widget: select
+    options:
+      <%- CustomAccPart.accpart.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+    value: "notchpeak-shared-short:notchpeak-shared-short"
+    cacheable: true
+
+```
+In the `cluster` section here we omit the Frisco definitions.
+
+In the `submit.yml.erb` we also need to parse the `custom_accpart` into the account and queue objects with those that OOD expects:
+```
+  accounting_id: "<%= custom_accpart.slice(0..(custom_accpart.index(':')-1)) %>"
+  queue_name: "<%= custom_accpart.slice((custom_accpart.index(':')+1)..-1) %>"
+```
+
+### Auto-filling GPU information
+
+GPU information is auto-filled through OOD's [Dynamic Form Widgets](https://osc.github.io/ood-documentation/latest/app-development/interactive/dynamic-form-widgets.html). This requires listing of each of the GPU type and specifying in which cluster to hide that GPU, as shown in our [template](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/job_params_v3) that gets inserted into each `form.yml.erb`. This list is rather long since it requires to manually list each GPU type and what cluster it is NOT on, e.g.:
+```
+  gpu_type:
+    label: "GPU type"
+    widget: select
+    value: "none" 
+    options:
+      - [
+           'none',
+           data-hide-gpu-count: true
+        ]
+      - [
+           'GTX 1080 Ti, SP, general, owner','1080ti',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-kingspeak: false
+        ]
+      - [
+           'GTX Titan X, SP, owner','titanx',
+           data-option-for-cluster-ash: false,
+           data-option-for-cluster-notchpeak: false,
+           data-option-for-cluster-lonepeak: false
+        ]
+```
+
+This kind of specification requires a separate input field for the GPU count called `gpu_count`.
+The default GPU option is `none`, which hides the `gpu_count` field since it's not necessary.
+
+In the `submit.yml.erb` we then tie the `gpu_type` and `gpu_count` together as:
+```
+    <%- if gpu_type != "none" -%>
+    - "--gres=gpu:<%= gpu_type %>:<%= gpu_count %>"
+    <%- end -%>
+```
+
+### Hiding job input fields when Frisco nodes are selected
+
+The Dynamic Form Widgets](https://osc.github.io/ood-documentation/latest/app-development/interactive/dynamic-form-widgets.html) also allow to hide fields, like account, walltime, etc, that are not needed for the Frisco jobs. Because the list of fields to hide is long and has to be done for each `frisco`, it's in a separate include file in the templates directory, [friscos_v2](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/friscos_v2). For each Frisco, the entry is:
+```
+      - [
+          'frisco1',
+          data-hide-gpu-type: true,
+          data-hide-memtask: true,
+          data-hide-bc-vnc-resolution: true,
+          data-hide-num-cores: true,
+          data-hide-bc-num-hours: true,
+          data-hide-custom-accpart: true,
+          data-hide-bc-email-on-started: true,
+        ]
+```
+
+And it is included in the `form.yml.erb` in the `cluster` section as:
+```
+  cluster:
+    widget: select
+    options:
+      <%- CustomQueues.clusters.each do |g| %>
+      - "<%= g %>"
+      <%- end %>
+<% IO.foreach(template_root+"friscos_v2") do |line| %>
+<%= line %>
+<% end %>
+    value: "notchpeak"
+    cacheable: true
+```
 ### Google Analytics
 
 It is useful to set up Google Analytics to gather usage data, rather than parsing through the Apache logs. This is somewhat hiddenly explained [here](https://osc.github.io/ood-documentation/master/infrastructure/ood-portal-generator/examples/add-google-analytics.html).

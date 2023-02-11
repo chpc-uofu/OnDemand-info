@@ -28,7 +28,8 @@ class CustomQueues ### GET PARTITIONS FOR THIS USER ###
   def self.init
     @init ||= begin
        # run script to produce cluster.txt, account.txt and partition.txt
-       my_cmd = "/uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev/template/get_allocations.sh" 
+       #my_cmd = "/uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev/template/get_allocations.sh" 
+       my_cmd = "/var/www/ood/apps/templates/get_allocations.sh" 
        args = []
        o, e, s = Open3.capture3(my_cmd , *args)
     end
@@ -78,8 +79,43 @@ class CustomQueues ### GET PARTITIONS FOR THIS USER ###
   end
 end
 
-# call these once during the initiazlier so that it'll be cached for later.
+class CustomAccPart ### GET ACCOUNTS PARTITIONS FOR THIS USER ###
+  def self.init
+    @init ||= begin
+       # run script to produce cluster.txt, account.txt and partition.txt
+       #my_cmd = "/uufs/chpc.utah.edu/common/home/u0101881/ondemand/dev/template/get_alloc_by_cluster.sh" 
+       my_cmd = "/var/www/ood/apps/templates/get_alloc_by_cluster.sh" 
+       args = []
+       o, e, s = Open3.capture3(my_cmd , *args)
+    end
+  end
+  # in future think of making loop over array clusters_available, https://linuxhint.com/iterate-through-array-ruby/
+  # will need to create a variable named after each cluster, or array of arrays and index clusters the same in all references
+  def self.accpart
+    @accpart ||= begin
+       # read list of np acc:part
+       @accpart_available = []
+       clusters = %w{notchpeak kingspeak lonepeak ash}
+       clusters.each do |element|
+         path = Pathname.new("/uufs/chpc.utah.edu/common/home/#{User.new.name}/ondemand/data/#{element}.txt")
+         args = [path.to_s]
+         o, e, s = Open3.capture3("cat" , *args) 
+         o.each_line do |v|
+           @accpart_available.append(v.gsub(/\s+/, ""))
+#           @accpart_available.push(v.gsub(/\s+/, ""))
+         end
+       end
+       @accpart_available
+      end
+  end
+end
+
+# call these once during the initializer so that it'll be cached for later.
+CustomAccPart.init
+CustomAccPart.accpart
+
 CustomQueues.init
 CustomQueues.clusters
 CustomQueues.accounts
 CustomQueues.partitions
+
