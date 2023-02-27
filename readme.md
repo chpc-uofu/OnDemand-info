@@ -451,6 +451,13 @@ To automatically start XFCE terminal when the remote desktop session starts, add
 cp /usr/share/applications/xfce4-terminal.desktop "${AUTOSTART}"
 ```
 
+To put an XFCE tiled wall paper onto the desktop, add this to `template/desktops/xfce.sh`::
+```
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorVNC-0/workspace0/last-image -s /uufs/chpc.utah.edu/sys/ondemand/chpc-class/R25_neurostats/template/desktops/MainLogo_blk_fullcolor.tif
+# set tiled image style
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitorVNC-0/workspace0/image-style -s 2
+```
+
 ### Other interactive apps
 
 Its the best to first stage the interactive apps in users space using the [app development option](https://osc.github.io/ood-documentation/master/app-development/enabling-development-mode.html). To set that up:
@@ -514,49 +521,12 @@ We have a number of SLURM partitions where an user can run. It can be hard to re
 
 ### SLURM accounts and partitions available to user, part 1
 
-The following is a first step in the process to make available only accounts/partitions that the user has access to. It provides pull-downs with that list the accounts/partitions, but, does not tie them together or to the cluster.
+The following is a first step in the process to make available only accounts/partitions that the user has access to. There is one pull down with the `account:partition` combination, but it's provided for all clusters. Second step should make only partitions for each cluster available, this will require JavaScript `form.js`.
 
-First, we create three arrays, listing the clusters, accounts and allocations. This is done by modification of [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) and involves:
-- running a script, [`/var/www/ood/apps/templates/get_allocations.sh`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/get_allocations.sh). that calls the `myallocations` command and parses the output to create 3 files in user's `~/ondemand/data` directory, `cluster.txt`, `account.txt` and `partition.txt`
-- reading these three text files and filling in three arrays in the `CustomQueues` class, `clusters`, `accounts` and `partitions`.
-
-These three arrays are then used in the `form.yml.erb` that defines the interactive app's submission form, as this:
-```
-  custom_account:
-    label: "Account"
-    widget: select
-    options:
-      <%- CustomQueues.accounts.each do |g| %>
-      - "<%= g %>"
-      <%- end %>
-    value: "notchpeak-shared-short"
-    cacheable: true
-  custom_queue:
-    label: "Partition"
-    widget: select
-    options:
-      <%- CustomQueues.partitions.each do |g| %>
-      - "<%= g %>"
-      <%- end %>
-    cacheable: true
-    value: "notchpeak-shared-short"
-```
-Similarly for the clusters, though we also manually list all the Frisco nodes.
-
-In the `submit.yml.erb` we also need to tie the custom account and queue objects with those that OOD expects:
-```
-  accounting_id: "<%= custom_account %>"
-  queue_name: "<%= custom_queue %>"
-
-```
-### SLURM accounts and partitions available to user, part 2
-
-This is a second step in the process to make available only accounts/partitions that the user has access to. There is one pull down with the `account:partition` combination, but it's provided for all clusters. Third step should make only partitions for each cluster available, this will require JavaScript `form.js`.
-
-First, we create two arrays, one for the clusters which we already have from step 1, and another which holds the allocation:partition information.. This is done by modification of [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) and involves:
-- running a script, [`/var/www/ood/apps/templates/get_alloc_by_cluster.sh`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/get_alloc_by_cluster.sh). that calls the `myallocations` command and parses the output to create one file per cluster in user's `~/ondemand/data` directory, e.g. `notchpeak.txt`, ...
-- reading these cluster based text files and filling an array in the `CustomAccPart` class, `accpart`.
-- the `CustomQueues` class from step 1 also needs to be executed but only the `clusters` array is needed.
+First, we create two arrays, listing the clusters, and accounts:partitions. This is done by modification of [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) and involves:
+- having a list of clusters in file `/var/www/ood/apps/templates/cluster.txt` which is read into Ruby array `CustomQueues.clusters`
+- running a script, [`/var/www/ood/apps/templates/get_alloc_all.sh`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/get_alloc_alll.sh). that calls the `myallocations` command and parses the output of all available `account:partition` pairs for all the clusters to be put into Ruby array `CustomAccPart.accpart`.
+- note that original approach to save output from the `get_alloc_all.sh` into user's directory and then reading it in `initializers/ood.rb` resulted in occasional failure, so, it is advisable to not rely on files generated to a disk for pre-filling this data.
 
 The `CustomQueues.clusters` and `CustomAccPart.accpart` are then used in the `form.yml.erb` that defines the interactive app's submission form, as this:
 ```
@@ -588,6 +558,14 @@ In the `submit.yml.erb` we also need to parse the `custom_accpart` into the acco
   accounting_id: "<%= custom_accpart.slice(0..(custom_accpart.index(':')-1)) %>"
   queue_name: "<%= custom_accpart.slice((custom_accpart.index(':')+1)..-1) %>"
 ```
+
+### SLURM accounts and partitions available to user, part 2
+
+This is a future project that should make only partitions for each cluster available, this will require JavaScript `form.js`.
+
+First, we create two arrays, one for the clusters which we already have from step 1, and another which holds the allocation:partition information, but now separate for each cluster. This is done by modification of [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) and involves:
+- running an updated script, [`/var/www/ood/apps/templates/get_alloc_by_cluster.sh`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/get_alloc_by_cluster.sh). that calls the `myallocations` command and parses the output separately for each cluster.
+- parsing this script output appropriately in the `initializers/ood.rb` to have separate `CustomAccPart` arrays for each cluster.
 
 ### Auto-filling GPU information
 
