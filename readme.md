@@ -47,7 +47,7 @@ Follow the [installation instructions](https://osc.github.io/ood-documentation/m
 
 ### Authentication
 
-We had LDAP before, now we have Keycloak. In general, we followed the [authentication](https://osc.github.io/ood-documentation/master/authentication.html) section of the install guide.
+We had LDAP before, then Keycloak, and now have CAS. The CAS is much simpler to set up than Keycloak. In general, we followed the [authentication](https://osc.github.io/ood-documentation/master/authentication.html) section of the install guide.
 
 #### LDAP
 As for LDAP, following the [LDAP setup instructions](https://osc.github.io/ood-documentation/master/installation/add-ldap.html), we first made sure we can talk to LDAP, e.g., in our case:
