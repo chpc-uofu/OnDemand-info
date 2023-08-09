@@ -395,15 +395,24 @@ Heres the full [```/etc/ood/config/apps/dashboard/initializers/ood.rb```](https:
 
 Following [https://osc.github.io/ood-documentation/master/customization.html#disk-quota-warnings-on-dashboard](https://osc.github.io/ood-documentation/master/customization.html#disk-quota-warnings-on-dashboard) with some adjustments based on [https://discourse.osc.edu/t/disk-quota-warnings-page-missing-some-info/716](https://discourse.osc.edu/t/disk-quota-warnings-page-missing-some-info/716).
 
+Each OOD machine needs to have a cron job to pull the json files from the web servers where they get generated to the OOD server. These files are located at
+```
+https://portal.chpc.utah.edu/monitoring/ondemand/storage_quota.json
+https://www.chpc.utah.edu/apps/systems/curl_post/quota.json
+```
+The first file is for more recent file servers like the VAST, the latter is for legacy file servers like the group spaces.
+
 JSON file with user storage info is produced from the quota logs run hourly, and then in ```/etc/ood/config/apps/dashboard/env```:
 ```
-OOD_QUOTA_PATH="https://www.chpc.utah.edu/apps/systems/curl_post/quota.json"
+OOD_QUOTA_PATH="/etc/ood/config/apps/dashboard/quota.json:/etc/ood/config/apps/dashboard/quota_legacy.json"
 OOD_QUOTA_THRESHOLD="0.90"
 ```
 
-For the https curl to work, we had to add the OOD servers to the www.chpc.utah.edu.
+For the recent file systems json file, Paul is getting the data from the VAST and stores on the CHPC Django portal, portal.chpc.utah.edu.
 
-To get the json file, our storage admin Sam runs a script on our XFS systems hourly to produce flat files that contain the quota information and sends them to our web server, where our webadmin Chonghuan has a parser that ingests this info into a database. Chonghuan then wrote a script that queries the database and creates the json file. A doctored version of this script, which assumes that one parses the flat file themselves, is here. 
+For the legacy https curl to work, we had to add the OOD servers to the www.chpc.utah.edu.
+
+To get the legacy json file, our storage admin Sam runs a script on our XFS systems hourly to produce flat files that contain the quota information and sends them to our web server, where our webadmin Chonghuan has a parser that ingests this info into a database. Chonghuan then wrote a script that queries the database and creates the json file. A doctored version of this script, which assumes that one parses the flat file themselves, is here. 
 
 ### Interactive desktop
 
@@ -648,6 +657,33 @@ analytics:
 * rebuild and reinstall Apache configuration file by running ```sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal```.
 * restart Apache, on CentOS 7: ```sudo systemctl try-restart httpd24-httpd.service httpd24-htcacheclean.service```.
 
+#### Change to Google Analytics 4
+
+Discussed at [this](https://discourse.openondemand.org/t/google-analytics-4-support/2464) thread. In particular:
+```
+mkdir -p /etc/ood/config/apps/dashboard/views/layouts
+cp /var/www/ood/apps/sys/dashboard/app/views/layouts/application.html.erb /etc/ood/config/apps/dashboard/views/layouts
+```
+
+Edit `/etc/ood/config/apps/dashboard/views/layouts/application.html.erb` and near the top put:
+```
+<%- tag_id = 'abc123' -%>
+
+<%- unless tag_id.nil? -%>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<%= tag_id %>"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '<%= tag_id %>');
+</script>
+<%- end -%>
+```
+
+The “Measurement ID” on GA4 is the “tag_id”.
+
 ### Impersonation
 
 Impersonation allows one to log in as yourself but in the OOD portal be another user. This could be useful in troubleshooting OOD problems.
@@ -688,3 +724,89 @@ e.g.
 ```
 "u0012345" u0123456
 ```
+
+## Update notes
+
+### Update to OOD 3.0
+
+- set maintenance mode:
+```
+touch /etc/ood/maintenance.enable
+```
+
+- Stop PUNs
+```
+/opt/ood/nginx_stage/sbin/nginx_stage nginx_clean -f
+```
+
+- do the update
+https://osc.github.io/ood-documentation/latest/release-notes/v3.0-release-notes.html#upgrade-directions
+
+- restart Apache
+```
+systemctl try-restart httpd
+```
+
+- change  `/etc/ood/config/apps/dashboard/initializers/ood.rb` to new syntax
+https://osc.github.io/ood-documentation/latest/release-notes/v3.0-release-notes.html#deprecations
+
+- update `/etc/ood/config/apps/dashboard/views/layouts/application.html.erb` for Google Analytics
+```
+cd /etc/ood/config/apps/dashboard/views/layouts/
+cp application.html.erb application.html.erb.2.0
+cp /var/www/ood/apps/sys/dashboard/app/views/layouts/application.html.erb .
+vi application.html.erb.2.0
+```
+copy Google Analytics tag
+```
+vi application.html.erb
+```
+paste Google Analytics tag
+
+- remove bc_desktop
+```
+cd /var/www/ood/apps/sys
+mv bc_desktop ../sys-2022-05-24/
+```
+
+- change websockify version in `/etc/ood/config/clusters.d/*.yml` to 0.10.0
+
+- fix the clusters app
+add rexml to dependencies - modify app files as in https://github.com/OSC/osc-systemstatus/commit/203d42a426d67323ef9d7c7d95fadd64b007b4d5
+```
+scl enable ondemand -- bin/bundle install --path vendor/bundle
+scl enable ondemand -- bin/setup
+touch tmp/restart.txt
+```
+
+Config changes - `/etc/ood/config/ondemand.d/ondemand.yml.erb`
+
+- clean old apps dirs after 30 days:
+https://osc.github.io/ood-documentation/latest/reference/files/ondemand-d-ymls.html#bc-clean-old-dirs
+```
+# clean old interactive app dirs
+bc_clean_old_dirs: true
+```
+- support ticket, https://osc.github.io/ood-documentation/latest/customizations.html#support-ticket-guide
+  - auto-filling the e-mail address, but Service Now team will create a completely separate page for ticket submission.
+```
+support_ticket:
+  email:
+    from: <%= Etc.getlogin %>@utah.edu
+    to: "helpdesk@chpc.utah.edu"
+    delivery_method: "smtp"
+    delivery_settings:
+      address: 'mail.chpc.utah.edu'
+      port: 25
+      authentication: 'none'
+  form:
+    - subject
+    - session_id
+    - session_description
+    - attachments
+    - description
+```
+
+- quick launch apps, https://osc.github.io/ood-documentation/latest/how-tos/app-development/interactive/sub-apps.html#
+  - no - would have to include all the form.yml.erb fields that are used in submit.yml.erb and show them on the page.
+
