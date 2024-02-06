@@ -625,9 +625,9 @@ GPU availability is dynamically filtered based on selected partition when submit
   notchpeak-gpu
   2080ti
   3090
-  A100
-  P40
-  V100
+  a100
+  p40
+  v100
 
   ...
 ```
