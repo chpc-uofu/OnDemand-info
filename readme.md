@@ -23,7 +23,8 @@ Table of Contents
       * [SLURM accounts and partitions available to user, part 1](#slurm-accounts-and-partitions-available-to-user-part-1)
       * [SLURM accounts and partitions available to user, part 2](#slurm-accounts-and-partitions-available-to-user-part-2)
       * [Auto-filling GPU information](#auto-filling-gpu-information)
-      * [Dynamic GPU information](#dynamic-gpu-information)
+      * [Dynamic GPU filtering](#dynamic-gpu-filtering)
+      * [Dynamic partition filtering](#dynamic-partition-filtering)
       * [Hiding job input fields when Frisco nodes are selected](#hiding-job-input-fields-when-frisco-nodes-are-selected)
       * [Google Analytics](#google-analytics)
       * [Google Analytics](#google-analytics)
@@ -577,6 +578,48 @@ First, we create two arrays, one for the clusters which we already have from ste
 - running an updated script, [`/var/www/ood/apps/templates/get_alloc_by_cluster.sh`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/get_alloc_by_cluster.sh). that calls the `myallocations` command and parses the output separately for each cluster.
 - parsing this script output appropriately in the `initializers/ood.rb` to have separate `CustomAccPart` arrays for each cluster.
 
+### Dynamic partition filtering
+
+Available partitions are automatically filtered when submitting a job based on cluster selection. Filtering is done entirely through [`form.js`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/form.js), using `notchpeak`, `np`, `kingspeak`, `kp`, `lonepeak`, `lp` as identifiers. 
+
+```
+  /**
+ * Filters account and partition options based on cluster selection.
+ */
+function filterAccountPartitionOptions() {
+    // Get selected value from cluster dropdown
+    const selectedCluster = document.getElementById('batch_connect_session_context_cluster').value;
+
+    // Get account:partition select element
+    const accountPartitionSelect = document.getElementById('batch_connect_session_context_custom_accpart');
+
+    // Get all options within account:partition select
+    const options = accountPartitionSelect.options;
+
+    // Define mapping for cluster names and acronyms
+    const clusterAcronyms = {
+        'ash': 'ash',
+        'kingspeak': 'kp',
+        'lonepeak': 'lp',
+        'notchpeak': 'np'
+    };
+
+    // Loop over options and hide those that do not match selected cluster
+    for (let i = 0; i < options.length; i++) {
+        const option = options[i];
+
+        // Determine if the option value should be visible
+        const isOptionVisible = option.value.indexOf(selectedCluster) >= 0 ||
+            (clusterAcronyms[selectedCluster] && option.value.indexOf(clusterAcronyms[selectedCluster]) >= 0);
+
+        // Set display style based on whether option should be visible
+        option.style.display = isOptionVisible ? 'block' : 'none';
+    }
+    // Reset advanced options for cluster change
+    toggleAdvancedOptions();
+}
+```
+
 ### Auto-filling GPU information
 
 GPU information is auto-filled through OOD's [Dynamic Form Widgets](https://osc.github.io/ood-documentation/latest/app-development/interactive/dynamic-form-widgets.html). This requires listing of each of the GPU type and specifying in which cluster to hide that GPU, as shown in our [template](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/job_params_v3) that gets inserted into each `form.yml.erb`. This list is rather long since it requires to manually list each GPU type and what cluster it is NOT on, e.g.:
@@ -613,7 +656,7 @@ In the `submit.yml.erb` we then tie the `gpu_type` and `gpu_count` together as:
     <%- end -%>
 ```
 
-### Dynamic GPU information
+### Dynamic GPU filtering
 
 GPU availability is dynamically filtered based on selected partition when submitting a job. GPU information for each partition is pulled via shell script [grabPartitionsGPUs.sh](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/grabPartitionsGPUs.sh). A list of partitions and GPUs available to that partion are are saved in the format of:
 
@@ -667,15 +710,6 @@ function filterGPUOptions() {
     } else {
         gpuSelect.parent().show(); // Show field with only 'none' option if partition not found
     }
-}
-
-/**
- * Helper function to set default GPU option on partition change.
- */
-function setDefaultGPU() {
-    // Get GPU select element
-    const gpuSelect = document.getElementById('batch_connect_session_context_gpu_type');
-    gpuSelect.selectedIndex = 0;
 }
 ```
 
