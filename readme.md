@@ -632,7 +632,52 @@ GPU availability is dynamically filtered based on selected partition when submit
   ...
 ```
 
-Functions CustomGPUPartitions and CustomGPUMappings was added to [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) to create an array of partition:gpu pairs and identifier:gpu pairs respectively. Both of these arrays were intitialized and embedded into HTML via each app's `form.yml.erb`. Arrays were accessed via [`form.js`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/form.js), and form filtering logic was done directly within the JavaScript.
+Functions CustomGPUPartitions and CustomGPUMappings was added to [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) to create an array of partition:gpu pairs and identifier:gpu pairs respectively. Both of these arrays were intitialized and embedded into HTML via each app's `form.yml.erb`. Arrays were accessed via [`form.js`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/form.js), and form filtering logic was done directly within the JavaScript:
+
+```
+/**
+ * Updates GPU options based on the selected partition.
+ */
+function filterGPUOptions() {
+    const selectedPartition = $('#batch_connect_session_context_custom_accpart').val().split(':')[1];
+    const partitionString = gpuDataHash["gpu_partitions"].find(partition => partition.startsWith(selectedPartition + ','));
+
+    const gpuSelect = $('#batch_connect_session_context_gpu_type');
+    gpuSelect.empty(); // Clear existing options
+
+    // Always add a 'none' option
+    gpuSelect.append(new Option('none', 'none'));
+
+    if (partitionString) {
+        const availableGPUs = partitionString.split(',').slice(1).map(gpu => gpu.trim());
+
+        if (availableGPUs.length > 0) {
+            // Add 'any' option if GPUs are available
+            gpuSelect.append(new Option('any', 'any'));
+
+            // Add available GPUs as options
+            availableGPUs.forEach(gpu => {
+                if (gpuMapping[gpu]) // Check for mapping
+                    gpuSelect.append(new Option(gpuMapping[gpu], gpu));
+            });
+            gpuSelect.parent().show(); // Show GPU selection field
+        } else {
+            gpuSelect.parent().show(); // Still show field with 'none' option
+        }
+    } else {
+        gpuSelect.parent().show(); // Show field with only 'none' option if partition not found
+    }
+}
+
+/**
+ * Helper function to set default GPU option on partition change.
+ */
+function setDefaultGPU() {
+    // Get GPU select element
+    const gpuSelect = document.getElementById('batch_connect_session_context_gpu_type');
+    gpuSelect.selectedIndex = 0;
+}
+```
 
 
 ### Hiding job input fields when Frisco nodes are selected
