@@ -614,7 +614,25 @@ In the `submit.yml.erb` we then tie the `gpu_type` and `gpu_count` together as:
 
 ### Dynamic GPU information
 
-GPU availability is dynamically filtered based on selected partition when submitting a job. GPU information for each partition is pulled via shell script [grabPartitionsGPUs.sh](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/grabPartitionsGPUs.sh).
+GPU availability is dynamically filtered based on selected partition when submitting a job. GPU information for each partition is pulled via shell script [grabPartitionsGPUs.sh](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/grabPartitionsGPUs.sh). A list of partitions and GPUs available to that partion are are saved in the format of:
+
+```
+  notchpeak-shared-short
+  1080ti
+  t4
+
+  notchpeak-gpu
+  2080ti
+  3090
+  A100
+  P40
+  V100
+
+  ...
+```
+
+Functions CustomGPUPartitions and CustomGPUMappings was added to [`/etc/ood/config/apps/dashboard/initializers/ood.rb`](https://github.com/CHPC-UofU/OnDemand-info/blob/master/config/apps/dashboard/initializers/ood.rb) to create an array of partition:gpu pairs and identifier:gpu pairs respectively. Both of these arrays were intitialized and embedded into HTML via each app's `form.yml.erb`. Arrays were accessed via [`form.js`](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/form.js), and form filtering logic was done directly within the JavaScript.
+
 
 ### Hiding job input fields when Frisco nodes are selected
 
