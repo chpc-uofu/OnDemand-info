@@ -612,6 +612,10 @@ In the `submit.yml.erb` we then tie the `gpu_type` and `gpu_count` together as:
     <%- end -%>
 ```
 
+### Dynamic GPU information
+
+GPU availability is dynamically filtered based on selected partition when submitting a job. GPU information for each partition is pulled via shell script [grabPartitionsGPUs.sh](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/grabPartitionsGPUs.sh).
+
 ### Hiding job input fields when Frisco nodes are selected
 
 The [Dynamic Form Widgets](https://osc.github.io/ood-documentation/latest/app-development/interactive/dynamic-form-widgets.html) also allow to hide fields, like account, walltime, etc, that are not needed for the Frisco jobs. Because the list of fields to hide is long and has to be done for each `frisco`, it's in a separate include file in the templates directory, [friscos_v2](https://github.com/CHPC-UofU/OOD-apps-v3/blob/master/app-templates/friscos_v2). For each Frisco, the entry is:
