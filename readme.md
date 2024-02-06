@@ -23,6 +23,7 @@ Table of Contents
       * [SLURM accounts and partitions available to user, part 1](#slurm-accounts-and-partitions-available-to-user-part-1)
       * [SLURM accounts and partitions available to user, part 2](#slurm-accounts-and-partitions-available-to-user-part-2)
       * [Auto-filling GPU information](#auto-filling-gpu-information)
+      * [Dynamic GPU information](#dynamic-gpu-information)
       * [Hiding job input fields when Frisco nodes are selected](#hiding-job-input-fields-when-frisco-nodes-are-selected)
       * [Google Analytics](#google-analytics)
       * [Google Analytics](#google-analytics)
