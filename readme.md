@@ -713,6 +713,14 @@ function filterGPUOptions() {
 }
 ```
 
+Since all fields on the interactive app form (`form.yml.erb`) are cacheable by default, the `gpudata` hidden field needs to be made non-cacheable. This allows the updates to the partitions and GPUs list to show up in the form:
+```
+  gpudata:
+    widget: hidden_field
+    cacheable: false
+    value: |
+      "<%= gpu_data.to_json %>"
+```
 
 ### Hiding job input fields when Frisco nodes are selected
 
