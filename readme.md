@@ -233,9 +233,12 @@ ln -s /usr/lib64/httpd/modules/mod_auth_cas.so /opt/rh/httpd24/root/etc/httpd/mo
 The configuration files:
 ```
 $ cat /opt/rh/httpd24/root/etc/httpd/conf.d/auth_cas.conf
-CASCookiePath /opt/rh/httpd24/root/var/cache/httpd/mod_auth_cas/
+LoadModule auth_cas_module modules/mod_auth_cas.so
+CASCookiePath /var/cache/httpd/mod_auth_cas/
+CASCertificatePath /etc/pki/tls/certs/ca-bundle.crt
 CASLoginURL https://go.utah.edu/cas/login
 CASValidateURL https://go.utah.edu/cas/serviceValidate
+CASTimeout 0
 ```
 ```
 $ cat /etc/httpd/conf.modules.d/10-auth_cas.conf
