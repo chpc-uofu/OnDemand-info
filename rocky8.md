@@ -97,7 +97,7 @@ LoadModule mpm_event_module modules/mod_mpm_event.so
 ```
 
 Check Apache config syntax: 
-```
+```https://github.com/chpc-uofu/OnDemand-info/blob/master/readme.md#slurm-accounts-and-partitions-available-to-user-part-1
 # /sbin/httpd -t
 ```
 
@@ -123,7 +123,7 @@ $ sudo systemctl start munge
 ```
 
 ### Clusters setup
-
+https://github.com/chpc-uofu/OnDemand-info/blob/master/readme.md#slurm-accounts-and-partitions-available-to-user-part-1
 ```
 scp -r u0101881@ondemand.chpc.utah.edu:/etc/ood/config/clusters.d /etc/ood/config
 ```
@@ -204,21 +204,31 @@ OR `install_scripts/get_customizations.sh`
 # ./genmodulefiles.sh
 ```
 
-OR `install_scripts/get_apps.sh`
+OR `install_scripts/get_apps.sh` (NB - modules are set up differently, don't run ./genmodulefiles.sh
 
 Restart web server in the client to see all the Interactive Apps. If seen proceed to testing the apps.
 Including check cluster status app.
 
-Apps checked:
-friscos: basic desktop, Matlab, Ansys EDT, Jupyter
-lonepeak: All
 
-!!!! Despite changing /etc/ood/config/clusters.d/lonepeak.yml to use websockify/0.8.0.r8, it is insisting on using websockify/0.8.0, so, changed that one to point to python2 instead to python. That fixed VNC remote desktop. (frisco1.yml correctly uses websockify/0.8.0.r8)
+## Changes after initial R8 installation
 
-!!!! apps/sys/matlab_html_app/template/before.sh.erb:export MWI_EXT_URL="ondemand.chpc.utah.edu"
+### Auto-initialization of accounts, partitions, GPUs in partition
 
-Apps issues to investigate later
-!!!! Ansys EDT has cut off window size
+Described in [CHPC OOD's readme](https://github.com/chpc-uofu/OnDemand-info/blob/master/readme.md#slurm-accounts-and-partitions-available-to-user-part-1) and below, it involves modification of `/etc/ood/config/apps/dashboard/initializers/ood.rb` to read in the information, which is then used/parsed in the interactive apps (mainly `form.yml.erb` and `form.js`).
+
+Supporting infrastructure includes running [script](https://github.com/chpc-uofu/OOD-apps-v3/blob/master/app-templates/grabPartitionsGPUs.sh) that produces a text file which lists the GPUs and partitions. The user accounts/partitions list is curled from portal.
+
+### Change in file systems quota
+
+Curled from portal via a cron job that runs on the ondemand server.
+
+### Cluster status apps
+
+Display node status for each node, e.g. for [notchpeak](https://github.com/chpc-uofu/OOD-apps-v3/tree/master/chpc-notchpeak-status). See this URL for description of what cron jobs are run and what and where they produce. Cron job on notchrm runs [getmodules.sh](https://github.com/chpc-uofu/OOD-apps-v3/blob/master/app-templates/getmodules.sh) once a day to generate file `/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates/modules/notchpeak.json` which is then symlinked to `/var/www/ood/apps/templates/modules/notchpeak.json`. As each cluster requires its own `json` file, other clusters files are symlinks to `notchpeak.json` (incl. `redwood.json` as PE uses a copy of the sys branch from the GE).
+
+### Dynamic modules
+
+Using [OOD's built in way](https://osc.github.io/ood-documentation/latest/reference/files/ondemand-d-ymls.html?highlight=module) to auto-set available module versions for interactive apps. 
 
 ### Outstanding things
 
