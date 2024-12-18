@@ -1,0 +1,46 @@
+---
+v2:
+  metadata:
+    title: "Granite"
+    priority: 2
+  login:
+    host: "granite.chpc.utah.edu"
+  job:
+    adapter: "slurm"
+    cluster: "granite"
+    bin: "/uufs/granite/sys/installdir/slurm/std/bin"
+  custom:
+    xdmod:
+      resource_id: 28
+    queues:
+      - "granite"
+      - "granite-guest"
+      - "granite-freecycle"
+  batch_connect:
+    basic:
+      script_wrapper: |
+        if [ -z "$LMOD_VERSION" ]; then
+           source /etc/profile.d/z00_chpc.sh
+        fi
+        export XDG_RUNTIME_DIR=$(mktemp -d)
+        # reset SLURM_EXPORT_ENV so that things like srun & sbatch have the same environment as the host
+        export SLURM_EXPORT_ENV=ALL
+        %s
+      set_host: "host=$(/uufs/chpc.utah.edu/sys/bin/hostfromroute.sh ondemand-test.chpc.utah.edu)"
+    vnc:
+      script_wrapper: |
+        # in notchpeak script
+        if [ -z "$LMOD_VERSION" ]; then
+           source /etc/profile.d/z00_chpc.sh
+        fi
+        export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/2.2.7/opt/TurboVNC/bin:$PATH"
+        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.10.0/bin/websockify"
+        export XDG_RUNTIME_DIR=$(mktemp -d)
+        # reset SLURM_EXPORT_ENV so that things like srun & sbatch have the same environment as the host
+        export SLURM_EXPORT_ENV=ALL
+        %s
+      set_host: "host=$(/uufs/chpc.utah.edu/sys/bin/hostfromroute.sh ondemand-test.chpc.utah.edu)"
+
+#      set_host: "host=$(hostname -A | awk '{print $2}')"
+# first hostname - TCP, second hostname - IB
+

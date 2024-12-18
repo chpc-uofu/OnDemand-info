@@ -1,0 +1,81 @@
+# /etc/ood/config/ondemand.d/ondemand.yml
+
+pinned_apps_menu_length: 8        # the default number of items in the dropdown menu list
+
+dashboard_layout:
+  rows:
+    - columns:
+      - width: 12
+        widgets:
+          - pinned_apps
+          - motd
+#          - xdmod_widget_job_efficiency
+#          - xdmod_widget_jobs
+    - columns:
+      - width: 6
+        widgets: ['xdmod_widget_job_efficiency']
+      - width: 6
+        widgets: ['xdmod_widget_jobs']
+
+pinned_apps:
+  - sys/chpc-systemstatus
+  - sys/desktop_expert
+  - sys/jupyter_app
+  - sys/rstudio_server_app
+  - sys/matlab_app
+  - sys/comsol_app
+  - sys/codeserver_app
+  - sys/vmd_app
+  - sys/ansys_workbench_app
+  - sys/abaqus_app
+  - sys/lumerical_app
+  - sys/idl_app
+
+# pinned_apps_group_by: category    # defaults to nil, no grouping
+
+# 'nav_bar' is the left side of the navigation bar.
+nav_bar:
+## 'apps' dropdown menu is shown if you've set 'pinned_apps'.
+#- apps
+  - files
+  - jobs
+  - clusters
+  - interactive apps
+  - classes
+  - my interactive sessions
+#
+## 'all apps' is disabled by default, but would be next if you set 'show_all_apps_link'.
+## - all apps
+#
+## 'help_bar' is the right side of the navigation bar.
+help_bar:
+  - develop
+  - help
+  - user
+  - logout
+
+# clean old interactive app dirs
+bc_clean_old_dirs: true
+
+support_ticket:
+  email:
+    from: <%= Etc.getlogin %>@utah.edu
+    to: "helpdesk@chpc.utah.edu"
+    delivery_method: "smtp"
+    delivery_settings:
+      address: 'mail.chpc.utah.edu'
+      port: 25
+      authentication: 'none'
+  form:
+    - subject
+    - attachments
+    - description
+
+module_file_dir: "/var/www/ood/apps/templates/modules"
+
+# single endpoint for all file systems (home, scratch, group)
+globus_endpoints:
+  - path: "/"
+    endpoint: "7cf0baa1-8bd0-4e91-a1e6-c19042952a7c"
+    endpoint_path: "/"
+
