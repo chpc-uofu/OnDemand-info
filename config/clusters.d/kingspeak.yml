@@ -29,11 +29,12 @@ v2:
       set_host: "host=$(/uufs/chpc.utah.edu/sys/bin/hostfromroute.sh ondemand.chpc.utah.edu)"
     vnc:
       script_wrapper: |
+        # in kingspeak script
         if [ -z "$LMOD_VERSION" ]; then
            source /etc/profile.d/chpc.sh
         fi
         export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
-        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
+        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.10.0/bin/websockify"
         export XDG_RUNTIME_DIR=$(mktemp -d)
         # reset SLURM_EXPORT_ENV so that things like srun & sbatch have the same environment as the host
         export SLURM_EXPORT_ENV=ALL

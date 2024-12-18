@@ -13,7 +13,7 @@
 # Example:
 #     servername: 'www.example.com'
 # Default: null (don't use name-based Virtual Host)
-servername: ondemand-test.chpc.utah.edu
+servername: ondemand.chpc.utah.edu
 
 # The server name used for rewrites
 # Example:
@@ -35,10 +35,10 @@ servername: ondemand-test.chpc.utah.edu
 # Default: null (no SSL support)
 #ssl: null
 ssl:
-  - 'SSLCertificateFile "/etc/letsencrypt/live/ondemand-test.chpc.utah.edu/fullchain.pem"'
-  - 'SSLCertificateKeyFile "/etc/letsencrypt/live/ondemand-test.chpc.utah.edu/privkey.pem"'
-  - 'Include conf/ssl/ssl-standard.conf'
-  - 'Include conf/ssl/lets-encrypt.conf'
+ - 'SSLCertificateFile "/etc/letsencrypt/live/ondemand.chpc.utah.edu/fullchain.pem"'
+ - 'SSLCertificateKeyFile "/etc/letsencrypt/live/ondemand.chpc.utah.edu/privkey.pem"'
+ - 'Include conf/ssl/ssl-standard.conf'
+ - 'Include conf/ssl/lets-encrypt.conf'
 
 # Root directory of log files (can be relative ServerRoot)
 # Example:
@@ -171,7 +171,7 @@ auth:
 # Example:
 analytics:
   url: 'http://www.google-analytics.com/collect'
-  id: 'UA-122259839-4'
+  id: 'UA-122259839-1'
 # Default: null (do not track)
 #analytics: null
 

@@ -15,8 +15,7 @@ v2:
     debug: true
     singularity_bin: /uufs/chpc.utah.edu/sys/installdir/singularity3/std/bin/singularity
     singularity_bindpath: /etc,/mnt,/media,/opt,/run,/srv,/usr,/var,/uufs,/scratch
-#    singularity_image: /opt/ood/linuxhost_adapter/centos7_lmod.sif
-    singularity_image: /uufs/chpc.utah.edu/sys/installdir/ood/centos7_lmod.sif
+    singularity_image: /uufs/chpc.utah.edu/sys/installdir/ood/rocky8_lmod.sif
     # Enabling strict host checking may cause the adapter to fail if the user's known_hosts does not have all the roundrobin hosts
     strict_host_checking: false
     tmux_bin: /usr/bin/tmux
@@ -36,7 +35,7 @@ v2:
         #!/bin/bash
         set -x
         export PATH="/uufs/chpc.utah.edu/sys/installdir/turbovnc/std/opt/TurboVNC/bin:$PATH"
-        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.8.0/bin/websockify"
+        export WEBSOCKIFY_CMD="/uufs/chpc.utah.edu/sys/installdir/websockify/0.10.0/bin/websockify"
         export XDG_RUNTIME_DIR=$(mktemp -d)
         %s
       set_host: "host=$(hostname -s).chpc.utah.edu"

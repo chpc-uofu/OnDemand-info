@@ -4,5 +4,4 @@ DEFAULT_SSHHOST="frisco1.chpc.utah.edu"
 OOD_SSH_WRAPPER=/var/www/ood/apps/sys/shell/bin/ssh
 
 # as of v 1.8 only hosts listed below are allowed to ssh to with the shell app
-OOD_SSHHOST_ALLOWLIST="notch[0-4][0-9][0-9].ipoib.int.chpc.utah.edu:lp[0-2][0-9][0-9].lonepeak.peaks:kp[0-3][0-9][0-9].ipoib.kingspeak.peaks:ash[2-4][0-9][0-9].ipoib.ash.peaks"
-
+OOD_SSHHOST_ALLOWLIST="grn[0-1][0-9][0-9].int.chpc.utah.edu:notch[0-4][0-9][0-9].ipoib.int.chpc.utah.edu:lp[0-2][0-9][0-9].lonepeak.peaks:kp[0-3][0-9][0-9].ipoib.kingspeak.peaks:ash[2-4][0-9][0-9].ipoib.ash.peaks"

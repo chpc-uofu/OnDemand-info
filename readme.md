@@ -262,6 +262,9 @@ auth:
 - 'RequestHeader unset Authorization'
 ```
 
+Check that there is `+:ALL:LOCAL` before `-:ALL EXCEPT (chpc) (wheel) root:ALL
+` in `/etc/security/access.conf`.
+
 Build and install new Apache configuration
 ```
 sudo /opt/ood/ood-portal-generator/sbin/update_ood_portal
@@ -276,7 +279,7 @@ sudo systemctl restart httpd24-httpd
 
 The stock Apache config that comes with CentOS is relatively weak. We have learned the hard way when a class of 30 people was unable to have everyone connected at the OnDemand server at the same time.
  
-We follow the [recommendations from OSC](https://discourse.osc.edu/t/ood-host-configuration-recommendations/883) on the Apache settings. These settings have made the web server more responsive and allowed to support more connections at the same time. In particular, modify file ```/opt/rh/httpd24/root/etc/httpd/conf.modules.d/00-mpm.conf```:<br>
+We follow the [recommendations from OSC](https://discourse.osc.edu/t/ood-host-configuration-recommendations/883) on the Apache settings. These settings have made the web server more responsive and allowed to support more connections at the same time. In particular, modify file ```/etc/httpd/conf.modules.d/00-mpm.conf``` (on CentoS7 ```/opt/rh/httpd24/root/etc/httpd/conf.modules.d/00-mpm.conf```):<br>
 ```
 #LoadModule mpm_prefork_module modules/mod_mpm_prefork.so
 LoadModule mpm_event_module modules/mod_mpm_event.so
@@ -306,7 +309,7 @@ Monitoring the web server performance is useful to see if the web server configu
 
 ### Cluster configuration files
 
-Follow [OOD docs](https://osc.github.io/ood-documentation/master/installation/add-cluster-config.html), we have one for each cluster, listed in [clusters.d of this repo](https://github.com/CHPC-UofU/OnDemand-info/tree/master/config/clusters.d).
+Follow [OOD docs](https://osc.github.io/ood-documentation/latest/installation/add-cluster-config.html), we have one for each cluster, listed in [clusters.d of this repo](https://github.com/CHPC-UofU/OnDemand-info/tree/master/config/clusters.d).
 
 ### Job templates
 

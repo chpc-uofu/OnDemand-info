@@ -18,11 +18,19 @@ OOD_DASHBOARD_HEADER_IMG_LOGO="/public/CHPC-logo.png"
 OOD_DASHBOARD_SUPPORT_URL="http://www.chpc.utah.edu/about/contact.php"
 OOD_DASHBOARD_SUPPORT_EMAIL="helpdesk@chpc.utah.edu"
 OOD_DASHBOARD_DOCS_URL="https://www.chpc.utah.edu/documentation/software/ondemand.php"
-OOD_DASHBOARD_PASSWD_URL="https://www.acs.utah.edu/uofu/acs/uupasswd/portal/password/selfservice/ForgottenPasswordHelp.jsp"
+OOD_DASHBOARD_PASSWD_URL="https://system.apps.utah.edu/uofu/acs/uupasswd/portal-self-service"
 
-OOD_QUOTA_PATH="https://www.chpc.utah.edu/apps/systems/curl_post/quota.json"
+#OOD_QUOTA_PATH="https://www.chpc.utah.edu/apps/systems/curl_post/quota.json"
+OOD_QUOTA_PATH="/etc/ood/config/apps/dashboard/quota.json:/etc/ood/config/apps/dashboard/quota_legacy.json"
 OOD_QUOTA_THRESHOLD="0.90"
 
 
 # BOOTSTRAP_NAVBAR_HEIGHT='80px'
+
+# enable dynamic form widgets
+# https://osc.github.io/ood-documentation/latest/app-development/interactive/dynamic-form-widgets.html
+OOD_BC_DYNAMIC_JS=true
+
+# how often to run SLURM commands, in us, default is 10000
+POLL_DELAY=30000
 

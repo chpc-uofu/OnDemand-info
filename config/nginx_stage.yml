@@ -92,6 +92,10 @@ pun_custom_env:
 #
 #passenger_python: '/opt/ood/nginx_stage/bin/python'
 
+# passenger options, see https://discourse.openondemand.org/t/proper-file-location-to-set-nginx-parameters/2213/3
+passenger_options:
+  passenger_max_request_queue_size : 200
+
 # Root location of per-user NGINX configs
 #
 #pun_config_path: '/var/lib/ondemand-nginx/config/puns/%{user}.conf'
@@ -207,7 +211,7 @@ pun_custom_env:
 # NB: This only affects the `pun` command, you are still able to start or stop
 #     the PUN using other commands (e.g., `nginx`, `nginx_clean`, ...)
 #
-#disabled_shell: '/access/denied'
+disabled_shell: '/bin/true'
 
 # Set BUNDLE_USER_CONFIG to /dev/null in the PUN environment
 # NB: This prevents a user's ~/.bundle/config from affecting OnDemand applications
