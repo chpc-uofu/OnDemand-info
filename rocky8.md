@@ -224,19 +224,38 @@ Curled from portal via a cron job that runs on the ondemand server.
 
 ### Cluster status apps
 
-Display node status for each node, e.g. for [notchpeak](https://github.com/chpc-uofu/OOD-apps-v3/tree/master/chpc-notchpeak-status). See this URL for description of what cron jobs are run and what and where they produce. Cron job on notchrm runs [getmodules.sh](https://github.com/chpc-uofu/OOD-apps-v3/blob/master/app-templates/getmodules.sh) once a day to generate file `/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates/modules/notchpeak.json` which is then symlinked to `/var/www/ood/apps/templates/modules/notchpeak.json`. As each cluster requires its own `json` file, other clusters files are symlinks to `notchpeak.json` (incl. `redwood.json` as PE uses a copy of the sys branch from the GE).
+Display node status for each node, e.g. for [notchpeak](https://github.com/chpc-uofu/OOD-apps-v3/tree/master/chpc-notchpeak-status). See that URL for description of what cron jobs are run and what and where they produce. Cron job on notchrm runs [getmodules.sh](https://github.com/chpc-uofu/OOD-apps-v3/blob/master/app-templates/getmodules.sh) once a day to generate file `/uufs/chpc.utah.edu/sys/ondemand/chpc-apps/app-templates/modules/notchpeak.json` which is then symlinked to `/var/www/ood/apps/templates/modules/notchpeak.json`. As each cluster requires its own `json` file, other clusters files are symlinks to `notchpeak.json` (incl. `redwood.json` as PE uses a copy of the sys branch from the GE).
+
+### Adding Globus into the File Manager
+```
+vi /etc/ood/config/ondemand.d/ondemand.yml.erb
+# single endpoint for all file systems (home, scratch, group)
+globus_endpoints:
+  - path: "/"
+    endpoint: "7cf0baa1-8bd0-4e91-a1e6-c19042952a7c"
+    endpoint_path: "/"
+```
 
 ### Dynamic modules
 
 Using [OOD's built in way](https://osc.github.io/ood-documentation/latest/reference/files/ondemand-d-ymls.html?highlight=module) to auto-set available module versions for interactive apps. 
 
+### Adding se-linux support in pe-ondemand
+
+Only in pe-ondemand, not in the GE.
+
+```
+yum install ondemand-selinux
+setsebool -P ondemand_use_slurm=on
+getsebool -a |grep ondemand
+
+```
+
+## Future options
+
 ### Outstanding things
 
-!!!! Netdata
-
-### After full R8 update
-
-- delete CentOS 7 modules in Jupyter, RStudio Server
+!!!! Netdata webserver monitoring
 
 ### Things to look at in the future
 
